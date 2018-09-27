@@ -30,46 +30,31 @@ namespace MetaProjetoExemplo.UnitTests.Application.Services
         .Setup(u => u.GetByEmailAsync(It.IsAny<string>()))
         .ReturnsAsync(user);
 
-      var actionLogServiceMock = new Mock<IActionLogService>();
+      // var actionLogServiceMock = new Mock<IActionLogService>();
       var jwtMock = new Mock<IJwtAuth>();
 
       jwtMock.Setup(j => j.CreateToken(It.IsAny<IEnumerable<Claim>>(), 600)).Returns(tokenValue);
 
       // EXECUTION
-      var service = new AuthService(userRepositoryMock.Object, actionLogServiceMock.Object, jwtMock.Object);
-      var token = await service.LoginAsync(new Login {
-        Email = email,
-        Password = password
-      });
+      var service = new AuthService(userRepositoryMock.Object, jwtMock.Object);
+      var token = await service.LoginAsync(email, password);
       // ASSERTS
       Assert.Equal(tokenValue, token);
-      // log de tentativa de login
-      actionLogServiceMock.Verify(a => a.RegisterLogAsync(ActionLogType.UserLoginAttempt, It.IsAny<string>()), Times.Once);
-      // log de sucesso no login
-      actionLogServiceMock.Verify(a => a.RegisterLogAsync(ActionLogType.UserLoginSuccess, It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
     }
     [Fact]
     public async Task Test_invalid_email_login_should_throw_exception()
     {
       // SETUP
       var userRepositoryMock = new Mock<IUserRepository>();
-      var actionLogServiceMock = new Mock<IActionLogService>();
+      // var actionLogServiceMock = new Mock<IActionLogService>();
       var jwtMock = new Mock<IJwtAuth>();
 
-      var service = new AuthService(userRepositoryMock.Object, actionLogServiceMock.Object, jwtMock.Object);
+      var service = new AuthService(userRepositoryMock.Object, jwtMock.Object);
 
       // EXECUTION
       await Assert.ThrowsAsync<InvalidUserEmailException>(async () => {
-        await service.LoginAsync(new Login {
-          Email = "teste@invalido.com",
-          Password = "123"
-        });
+        await service.LoginAsync("teste@invalido.com", "123");
       });
-      // ASSERTS
-      // log de tentativa de login
-      actionLogServiceMock.Verify(a => a.RegisterLogAsync(ActionLogType.UserLoginAttempt, It.IsAny<string>()), Times.Once);
-      // log de falha de login
-      actionLogServiceMock.Verify(a => a.RegisterLogAsync(ActionLogType.UserLoginFail, It.IsAny<string>()), Times.Once);
     }
     [Fact]
     public async Task Test_invalid_password_login_should_throw_exception()
@@ -85,23 +70,14 @@ namespace MetaProjetoExemplo.UnitTests.Application.Services
 
       userRepositoryMock.Setup(u => u.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(user);
 
-      var actionLogServiceMock = new Mock<IActionLogService>();
       var jwtMock = new Mock<IJwtAuth>();
 
-      var service = new AuthService(userRepositoryMock.Object, actionLogServiceMock.Object, jwtMock.Object);
+      var service = new AuthService(userRepositoryMock.Object, jwtMock.Object);
 
       // EXECUTION
       await Assert.ThrowsAsync<InvalidUserPasswordException>(async () => {
-        await service.LoginAsync(new Login {
-          Email = email,
-          Password = "wrong_password"
-        });
+        await service.LoginAsync(email, "wrong_password");
       });
-      // ASSERTS
-      // log de tentativa de login
-      actionLogServiceMock.Verify(a => a.RegisterLogAsync(ActionLogType.UserLoginAttempt, It.IsAny<string>()), Times.Once);
-      // log de falha de login
-      actionLogServiceMock.Verify(a => a.RegisterLogAsync(ActionLogType.UserLoginFail, It.IsAny<string>()), Times.Once);
     }
   }
 }

@@ -3,9 +3,11 @@
   <ItemGroup>
     <ProjectReference Include="..\MetaProjetoExemplo.Domain\MetaProjetoExemplo.Domain.csproj" />
     <ProjectReference Include="..\MetaProjetoExemplo.Security\MetaProjetoExemplo.Security.csproj" />
+    <ProjectReference Include="..\MetaProjetoExemplo.Domain.Core\MetaProjetoExemplo.Domain.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
   </ItemGroup>

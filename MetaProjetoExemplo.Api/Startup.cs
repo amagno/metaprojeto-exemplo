@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MediatR;
 using MetaProjetoExemplo.Application.Services;
 using MetaProjetoExemplo.Application.Services.Common;
 using MetaProjetoExemplo.Domain.Common;
@@ -52,9 +53,9 @@ namespace MetaProjetoExemplo.Api
       services.AddScoped<IProjectManagerRepository, ProjectManagerRepository>();
 
       services.AddScoped<IAuthService, AuthService>();
-      services.AddScoped<IActionLogService, ActionLogService>();
       services.AddScoped<IProjectManagementService, ProjectManagementService>();
 
+      services.AddMediatR();
 
       services.AddSwaggerGen(c => {
         c.SwaggerDoc("v1", new Info { Title = "Example App Api", Version = "v1" });

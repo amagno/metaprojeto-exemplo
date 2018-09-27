@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using MetaProjetoExemplo.Application.Commands;
 using MetaProjetoExemplo.Application.Exceptions;
 using MetaProjetoExemplo.Application.Services.Common;
 using MetaProjetoExemplo.Application.ViewModels;
@@ -17,13 +18,14 @@ namespace MetaProjetoExemplo.Api.Controllers
         /// <summary>
         /// Realiza login com token JWT
         /// </summary>
-        /// <param name="loginData"></param>
+        /// <param name="command"></param>
         /// <param name="authService"></param>
         /// <returns>Retorna token JWT de autenticação</returns>
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] Login loginData, [FromServices] IAuthService authService)
+        public async Task<ActionResult<string>> Login([FromBody] UserLoginCommand command, [FromServices] IAuthService authService)
         {
-          return await ExecuteServiceAsync<string>(() => authService.LoginAsync(loginData, _ipRequest));
+            command.SetIp(_ipRequest);
+            return await SendCommand(command);
         }
     }
 }

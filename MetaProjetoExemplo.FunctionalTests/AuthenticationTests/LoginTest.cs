@@ -69,6 +69,7 @@ namespace MetaProjetoExemplo.FunctionalTests.AuthenticationTests
           var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
           // realiza requisição
           var response = await client.PostAsync("/api/auth/login", content);
+          response.EnsureSuccessStatusCode();
           // token
           var token = await response.Content.ReadAsStringAsync();
           // pega serviço de autenticação

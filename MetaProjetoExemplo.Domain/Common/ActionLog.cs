@@ -10,26 +10,18 @@ namespace MetaProjetoExemplo.Domain.Common
     public Guid? UserIdentifier { get; private set; }
     public string IpAddress { get; private set; }
     public int ActionLogTypeId { get; private set; }
+    public string Description { get; private set; }
 
     protected ActionLog()
     {
       Date = DateTime.Now;
     }
-    public ActionLog(int actionLogTypeId) : this()
+    public ActionLog(int actionLogTypeId, string description, string ipAddress, Guid? identifier) : this()
     {
       ActionLogTypeId = actionLogTypeId;
-    }
-    public ActionLog(int actionLogTypeId, Guid identifier) : this(actionLogTypeId)
-    {
+      Description = description ?? string.Empty;
       UserIdentifier = identifier;
-    }
-    public ActionLog(int actionLogTypeId, string ipAddress) : this(actionLogTypeId)
-    {
-      IpAddress = ipAddress;
-    }
-    public ActionLog(int actionLogTypeId, Guid identifier, string ipAddress) : this(actionLogTypeId, identifier)
-    {
-      IpAddress = ipAddress;
+      IpAddress = ipAddress ?? string.Empty;
     }
   }
 }

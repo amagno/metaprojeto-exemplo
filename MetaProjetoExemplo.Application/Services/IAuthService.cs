@@ -12,6 +12,6 @@ namespace MetaProjetoExemplo.Application.Services.Common
       /// <param name="password"></param>
       /// <param name="ipAddress"></param>
       /// <returns>Jwt token</returns>
-      Task<string> LoginAsync(Login loginData, string ipAddress = null);
+      Task<string> LoginAsync(string email, string password);
   }
 }

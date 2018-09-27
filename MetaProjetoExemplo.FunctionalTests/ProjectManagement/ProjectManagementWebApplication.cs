@@ -67,10 +67,7 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
       }
       await SeedDataAsync(scope);
       var auth = scope.ServiceProvider.GetRequiredService<IAuthService>();
-      var token =  await auth.LoginAsync(new Login {
-        Email = DefaultUser.Email,
-        Password = DefaultUser.Password
-      });
+      var token =  await auth.LoginAsync(DefaultUser.Email, DefaultUser.Password);
       var authHeader = new AuthenticationHeaderValue("Bearer", token);
       _client.DefaultRequestHeaders.Authorization = authHeader;
       return _client;

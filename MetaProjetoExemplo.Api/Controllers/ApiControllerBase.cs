@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using MediatR;
 using MetaProjetoExemplo.Application.Exceptions;
 using MetaProjetoExemplo.Application.Extesions;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,11 @@ namespace MetaProjetoExemplo.Api.Controllers
       {
         return StatusCode(500, e.Message);
       }
+    }
+    protected async Task<T> SendCommand<T>(IRequest<T> command)
+    {
+      var mediator = HttpContext.RequestServices.GetService(typeof(IMediator)) as IMediator;
+      return await mediator.Send(command);
     }
   }
 }

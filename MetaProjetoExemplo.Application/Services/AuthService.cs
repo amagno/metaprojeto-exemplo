@@ -13,13 +13,11 @@ namespace MetaProjetoExemplo.Application.Services.Common
   public class AuthService : IAuthService
   {
     private readonly IUserRepository _userRepository;
-    private readonly IActionLogService _actionLogService;
     private readonly IJwtAuth _jwt;
     public AuthService(
-      IUserRepository userRepository, IActionLogService actionLogService, IJwtAuth jwt
+      IUserRepository userRepository, IJwtAuth jwt
       )
     {
-      _actionLogService = actionLogService;
       _userRepository = userRepository;
       _jwt = jwt;
     }
@@ -30,24 +28,20 @@ namespace MetaProjetoExemplo.Application.Services.Common
     /// <param name="password"></param>
     /// <param name="ipAddress"></param>
     /// <returns>Token de autenticação</returns>
-    public async Task<string> LoginAsync(Login loginData, string ipAddress = null)
+    public async Task<string> LoginAsync(string email, string password)
     {
-      var user = await _userRepository.GetByEmailAsync(loginData.Email);
-      await _actionLogService.RegisterLogAsync(ActionLogType.UserLoginAttempt, ipAddress);
+      var user = await _userRepository.GetByEmailAsync(email);
 
       if (user == null)
       {
-        await _actionLogService.RegisterLogAsync(ActionLogType.UserLoginFail, ipAddress);
-        throw new InvalidUserEmailException(loginData.Email);
+        throw new InvalidUserEmailException(email);
       }
 
-      if (!ValidateUserPassword(user, loginData.Password))
+      if (!ValidateUserPassword(user, password))
       {
-        await _actionLogService.RegisterLogAsync(ActionLogType.UserLoginFail, ipAddress);
         throw new InvalidUserPasswordException();
       }
 
-      await _actionLogService.RegisterLogAsync(ActionLogType.UserLoginSuccess, user.Identifier, ipAddress);
       return _jwt.CreateToken(CreateClaims(user));
 
     }
