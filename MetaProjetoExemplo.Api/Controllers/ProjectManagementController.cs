@@ -30,8 +30,7 @@ namespace MetaProjetoExemplo.Api.Controllers
         [FromServices] IProjectManagementService projectManagementService
         )
       {
-        var uid = HttpContext.GetUserIdentifier();
-        return await ExecuteServiceAsync(() => projectManagementService.CreateProject(uid, newProjectData));
+        return await ExecuteServiceAsync(() => projectManagementService.CreateProject(_userIdentifier, newProjectData));
       }
       /// <summary>
       /// Projetos do usuário logado
@@ -42,8 +41,7 @@ namespace MetaProjetoExemplo.Api.Controllers
       [JwtAuthorize]
       public async Task<ActionResult<ProjectManagerItem>> GetUserProjects([FromServices] IProjectManagementService projectManagementService)
       {
-        var uid = HttpContext.GetUserIdentifier();
-        return await ExecuteServiceAsync(() => projectManagementService.GetUserProjects(uid));
+        return await ExecuteServiceAsync(() => projectManagementService.GetUserProjects(_userIdentifier));
       }
     }
 }

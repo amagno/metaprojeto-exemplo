@@ -23,8 +23,7 @@ namespace MetaProjetoExemplo.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login([FromBody] Login loginData, [FromServices] IAuthService authService)
         {
-          var ip = HttpContext.Connection.RemoteIpAddress != null ? HttpContext.Connection.RemoteIpAddress.ToString() : "no_ip_info";
-          return await ExecuteServiceAsync<string>(() => authService.LoginAsync(loginData, ip));
+          return await ExecuteServiceAsync<string>(() => authService.LoginAsync(loginData, _ipRequest));
         }
     }
 }
