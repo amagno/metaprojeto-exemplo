@@ -24,7 +24,6 @@ namespace MetaProjetoExemplo.Application.ViewModels
   public class ProjectManagerItem
   {
     public int Id { get; set; }
-    public string Name { get; set; }
     public IEnumerable<ProjectItem> Projects { get; set; }
   }
   public class ProjectItem : ProjectBase

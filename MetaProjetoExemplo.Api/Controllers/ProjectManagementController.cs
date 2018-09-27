@@ -17,6 +17,12 @@ namespace MetaProjetoExemplo.Api.Controllers
     [ApiController]
     public class ProjectManagementController : ApiControllerBase
     {
+      /// <summary>
+      /// Criar novo projeto para usuário logado
+      /// </summary>
+      /// <param name="newProjectData"></param>
+      /// <param name="projectManagementService"></param>
+      /// <returns></returns>
       [HttpPost]
       [JwtAuthorize]
       public async Task<ActionResult<ProjectCreated>> CreateProject(
@@ -27,6 +33,11 @@ namespace MetaProjetoExemplo.Api.Controllers
         var uid = HttpContext.GetUserIdentifier();
         return await ExecuteServiceAsync(() => projectManagementService.CreateProject(uid, newProjectData));
       }
+      /// <summary>
+      /// Projetos do usuário logado
+      /// </summary>
+      /// <param name="projectManagementService"></param>
+      /// <returns></returns>
       [HttpGet]
       [JwtAuthorize]
       public async Task<ActionResult<ProjectManagerItem>> GetUserProjects([FromServices] IProjectManagementService projectManagementService)
