@@ -11,7 +11,7 @@ using MetaProjetoExemplo.Domain.ProjectManagement;
 
 namespace MetaProjetoExemplo.Application.Commands
 {
-  public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, int>
+  public class CreateProjectCommandHandler : IRequestHandler<AuthenticatedCommand<CreateProjectCommand, int>, int>
   {
     private readonly IProjectManagerRepository _projectManagerRepository;
     private readonly IMediator _mediator;
@@ -20,18 +20,18 @@ namespace MetaProjetoExemplo.Application.Commands
       _mediator = mediator;
       _projectManagerRepository = projectManagerRepository;
     }
-    public async Task<int> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AuthenticatedCommand<CreateProjectCommand, int> request, CancellationToken cancellationToken)
     {
       try
       {
-        var pm = await _projectManagerRepository.GetByUserIdentifierAsync(request.GetUserIdentifier());
+        var pm = await _projectManagerRepository.GetByUserIdentifierAsync(request.UserIdentifier);
         var exists = (pm != null);
 
         if (!exists)
         {
-          pm = new ProjectManager(request.GetUserIdentifier());
+          pm = new ProjectManager(request.UserIdentifier);
         }
-        pm.AddProject(request.Title, request.StartDate, request.FinishDate);
+        pm.AddProject(request.Command.Title, request.Command.StartDate, request.Command.FinishDate);
         var result = exists ?
            _projectManagerRepository.Update(pm) :
            _projectManagerRepository.Add(pm);

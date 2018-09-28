@@ -21,8 +21,7 @@ namespace MetaProjetoExemplo.Api.Controllers
         [FromBody] CreateProjectCommand command
         )
       {
-        command.SetUserIdentifier(_userIdentifier);
-        return await SendCommandAsync(command);
+        return await SendCommandAsync(new AuthenticatedCommand<CreateProjectCommand, int>(command, _userIdentifier));
       }
       /// <summary>
       /// Projetos do usuário logado

@@ -23,7 +23,7 @@ namespace MetaProjetoExemplo.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthData>> Login([FromBody] UserLoginCommand command, [FromServices] IAuthService authService)
         {
-            command.SetIp(_ipRequest);
+            // MAKE IDETIFIED COMMAND FOR SEND IP
             return await SendCommandAsync(command);
         }
     }

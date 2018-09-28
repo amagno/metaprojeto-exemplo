@@ -1,11 +1,12 @@
+
+
 using System;
 using System.ComponentModel.DataAnnotations;
-using MediatR;
-using MetaProjetoExemplo.Application.Exceptions;
+using MetaProjetoExemplo.Domain.Core;
 
 namespace MetaProjetoExemplo.Application.Commands
 {
-  public class CreateProjectCommand : IRequest<int>
+  public class CreateProjectCommand : IAuthenticatedRequest<int>
   {
     // request data properties
     [Required]
@@ -15,16 +16,11 @@ namespace MetaProjetoExemplo.Application.Commands
     [Required]
     public DateTime FinishDate { get; set; }
 
-    public Guid UserIdentifier { get; private set; }
-    // 
-    private Guid _uid;
-    public void SetUserIdentifier(Guid uid)
+    public CreateProjectCommand(string title, DateTime startDate, DateTime finishDate)
     {
-      _uid = uid;
-    }
-    public Guid GetUserIdentifier()
-    {
-      return _uid != null ? _uid : throw new InvalidRequestException("UserIdentifier in the request is invalid");
+      Title = title;
+      StartDate = startDate;
+      FinishDate = finishDate;
     }
   }
 }
