@@ -7,7 +7,7 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
   public interface IProjectManagerRepository : IRepository
   {
     ProjectManager Add(ProjectManager projectManager);
-    void Update(ProjectManager projectManager);
+    ProjectManager Update(ProjectManager projectManager);
     Task<ProjectManager> GetByUserIdentifierAsync(Guid userIdentfier);
   }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using MediatR;
+using MetaProjetoExemplo.Application.Queries;
 using MetaProjetoExemplo.Application.Services;
 using MetaProjetoExemplo.Application.Services.Common;
 using MetaProjetoExemplo.Domain.Common;
@@ -49,11 +50,11 @@ namespace MetaProjetoExemplo.Api
 
 
       services.AddScoped<IUserRepository, UserRepository>();
-      services.AddScoped<IActionLogRepository, ActionLogRepository>();
+      services.AddScoped<IActionRepository, ActionRepository>();
       services.AddScoped<IProjectManagerRepository, ProjectManagerRepository>();
 
       services.AddScoped<IAuthService, AuthService>();
-      services.AddScoped<IProjectManagementService, ProjectManagementService>();
+      services.AddScoped<IProjectManagerQueries, ProjectManagerQueries>();
 
       services.AddMediatR();
 

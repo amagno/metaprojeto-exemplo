@@ -4,7 +4,7 @@ using MetaProjetoExemplo.Domain.Core;
 namespace MetaProjetoExemplo.Domain.Common
 {
  
-  public class ActionLog : Entity
+  public class Action : Entity
   {
     public DateTime Date { get; private set; }
     public Guid? UserIdentifier { get; private set; }
@@ -12,11 +12,11 @@ namespace MetaProjetoExemplo.Domain.Common
     public int ActionLogTypeId { get; private set; }
     public string Description { get; private set; }
 
-    protected ActionLog()
+    protected Action()
     {
       Date = DateTime.Now;
     }
-    public ActionLog(int actionLogTypeId, string description, string ipAddress, Guid? identifier) : this()
+    public Action(int actionLogTypeId, string description, string ipAddress, Guid? identifier) : this()
     {
       ActionLogTypeId = actionLogTypeId;
       Description = description ?? string.Empty;

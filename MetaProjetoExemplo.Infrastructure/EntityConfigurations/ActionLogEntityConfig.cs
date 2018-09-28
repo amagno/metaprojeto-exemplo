@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MetaProjetoExemplo.Infrastructure.EntityConfiguration
 {
-  public class ActionLogEntityConfig : IEntityTypeConfiguration<ActionLog>
+  public class ActionLogEntityConfig : IEntityTypeConfiguration<Action>
   {
-    public void Configure(EntityTypeBuilder<ActionLog> builder)
+    public void Configure(EntityTypeBuilder<Action> builder)
     {
       builder.ToTable("actions_logs", ExampleAppContext.COMMON_SCHEMA);
       builder.HasIndex(u => u.Id);
@@ -18,7 +18,7 @@ namespace MetaProjetoExemplo.Infrastructure.EntityConfiguration
       //   .IsRequired(false);
       
       builder
-        .HasOne<ActionLogType>()
+        .HasOne<ActionType>()
         .WithMany()
         .HasForeignKey(a => a.ActionLogTypeId)
         .IsRequired();

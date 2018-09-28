@@ -6,24 +6,24 @@ using MetaProjetoExemplo.Domain.Events;
 
 namespace MetaProjetoExemplo.Application.Events
 {
-  public class ActionLogEventHandler : INotificationHandler<ActionLogEvent>
+  public class ActionLogEventHandler : INotificationHandler<ActionEvent>
   {
-    private readonly IActionLogRepository  _actionLogRepository;
-    public ActionLogEventHandler(IActionLogRepository actionLogRepository)
+    private readonly IActionRepository  _actionRepository;
+    public ActionLogEventHandler(IActionRepository actionRepository)
     {
-      _actionLogRepository = actionLogRepository;
+      _actionRepository = actionRepository;
     }
 
-    public async Task Handle(ActionLogEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(ActionEvent notification, CancellationToken cancellationToken)
     {
-      _actionLogRepository.Add(new ActionLog(
-        notification.ActionLogType.Id, 
+      _actionRepository.Add(new Action(
+        notification.ActionType.Id, 
         notification.Description,  
         notification.IpAddress,
         notification.UserIdentifier
       ));
 
-      await _actionLogRepository.UnitOfWork.SaveChangesAsync();
+      await _actionRepository.UnitOfWork.SaveChangesAsync();
     }
   }
 }

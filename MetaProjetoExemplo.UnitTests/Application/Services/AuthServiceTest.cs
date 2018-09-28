@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Application.Exceptions;
 using MetaProjetoExemplo.Application.Services.Common;
-using MetaProjetoExemplo.Application.ViewModels;
 using MetaProjetoExemplo.Domain.Common;
 using MetaProjetoExemplo.Security;
 using Moq;
@@ -37,9 +36,9 @@ namespace MetaProjetoExemplo.UnitTests.Application.Services
 
       // EXECUTION
       var service = new AuthService(userRepositoryMock.Object, jwtMock.Object);
-      var token = await service.LoginAsync(email, password);
+      var result = await service.LoginAsync(email, password);
       // ASSERTS
-      Assert.Equal(tokenValue, token);
+      Assert.Equal(tokenValue, result.Token);
     }
     [Fact]
     public async Task Test_invalid_email_login_should_throw_exception()

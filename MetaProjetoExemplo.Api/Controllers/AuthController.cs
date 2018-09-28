@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MetaProjetoExemplo.Application.Commands;
 using MetaProjetoExemplo.Application.Exceptions;
 using MetaProjetoExemplo.Application.Services.Common;
-using MetaProjetoExemplo.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MetaProjetoExemplo.Api.Controllers
@@ -22,10 +21,10 @@ namespace MetaProjetoExemplo.Api.Controllers
         /// <param name="authService"></param>
         /// <returns>Retorna token JWT de autenticação</returns>
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] UserLoginCommand command, [FromServices] IAuthService authService)
+        public async Task<ActionResult<AuthData>> Login([FromBody] UserLoginCommand command, [FromServices] IAuthService authService)
         {
             command.SetIp(_ipRequest);
-            return await SendCommand(command);
+            return await SendCommandAsync(command);
         }
     }
 }

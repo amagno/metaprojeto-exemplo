@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Api;
+using MetaProjetoExemplo.Application.Services.Common;
 using MetaProjetoExemplo.Domain.Common;
 using MetaProjetoExemplo.Infrastructure;
 using MetaProjetoExemplo.Security;
@@ -70,12 +71,14 @@ namespace MetaProjetoExemplo.FunctionalTests.AuthenticationTests
           // realiza requisição
           var response = await client.PostAsync("/api/auth/login", content);
           response.EnsureSuccessStatusCode();
-          // token
-          var token = await response.Content.ReadAsStringAsync();
+          // result
+          var resultText = await response.Content.ReadAsStringAsync();
+
+          var obj = JsonConvert.DeserializeObject<AuthData>(resultText);
           // pega serviço de autenticação
           var jwt = scope.ServiceProvider.GetRequiredService<IJwtAuth>();
           // valida o token
-          var result = jwt.ValidateToken(token);
+          var result = jwt.ValidateToken(obj.Token);
 
           Assert.True(result.IsValid);
         } else {

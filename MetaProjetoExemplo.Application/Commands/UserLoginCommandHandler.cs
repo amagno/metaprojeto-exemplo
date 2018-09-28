@@ -9,7 +9,7 @@ using MetaProjetoExemplo.Domain.Events;
 
 namespace MetaProjetoExemplo.Application.Commands
 {
-  public class UserLoginCommandHandler : IRequestHandler<UserLoginCommand, string>
+  public class UserLoginCommandHandler : IRequestHandler<UserLoginCommand, AuthData>
   {
     private readonly IMediator _mediator;
     private readonly IAuthService _auth;
@@ -18,16 +18,18 @@ namespace MetaProjetoExemplo.Application.Commands
       _mediator = mediator;
       _auth = auth;
     }
-    public async Task<string> Handle(UserLoginCommand request, CancellationToken cancellationToken)
+    public async Task<AuthData> Handle(UserLoginCommand request, CancellationToken cancellationToken)
     {
       try
       {
-        await _mediator.Publish(new ActionLogEvent(ActionLogType.UserLoginAttempt, request.GetIp()));
-        return await _auth.LoginAsync(request.Email, request.Password);
+        await _mediator.Publish(new LoginAttemptActionEvent(request.GetIp()));
+        var result = await _auth.LoginAsync(request.Email, request.Password);
+        await _mediator.Publish(new LoginSuccessActionEvent(result.UserIdentifier, request.GetIp()));
+        return result;
       }
       catch(InvalidRequestException e)
       {
-        await _mediator.Publish(new ActionLogEvent(ActionLogType.UserLoginFail, request.GetIp(), e.Message));
+        await _mediator.Publish(new LoginFailActionEvent(request.GetIp()));
         throw e;
       }
     }

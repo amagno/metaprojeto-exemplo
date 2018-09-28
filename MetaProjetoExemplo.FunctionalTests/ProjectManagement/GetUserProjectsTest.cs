@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using MetaProjetoExemplo.Application.ViewModels;
+using MetaProjetoExemplo.Application.Queries;
 using MetaProjetoExemplo.Domain.ProjectManagement;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -43,7 +43,7 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
         var response = await client.GetAsync("/api/project-management/");
         // resultadp
         var result = await response.Content.ReadAsStringAsync();
-        var objectResult = JsonConvert.DeserializeObject<ProjectManagerItem>(result);
+        var objectResult = JsonConvert.DeserializeObject<ProjectManagerViewModel>(result);
 
         response.EnsureSuccessStatusCode();
         Assert.Single(objectResult.Projects);

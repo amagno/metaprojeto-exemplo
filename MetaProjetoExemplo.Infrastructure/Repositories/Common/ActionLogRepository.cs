@@ -2,15 +2,15 @@ using MetaProjetoExemplo.Domain.Common;
 
 namespace MetaProjetoExemplo.Infrastructure.Repositories.Common
 {
-  public class ActionLogRepository : EntityRepository<ActionLog>, IActionLogRepository
+  public class ActionRepository : EntityRepository<Action>, IActionRepository
   {
-    public ActionLogRepository(ExampleAppContext dbContext) : base(dbContext)
+    public ActionRepository(ExampleAppContext dbContext) : base(dbContext)
     {
     }
 
-    public ActionLog Add(ActionLog log)
+    public Action Add(Action action)
     {
-      return _entity.Add(log).Entity;
+      return _entity.Add(action).Entity;
     }
   }
 }

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using MetaProjetoExemplo.Application.ViewModels;
 
 namespace MetaProjetoExemplo.Application.Services.Common
 {
@@ -12,6 +11,6 @@ namespace MetaProjetoExemplo.Application.Services.Common
       /// <param name="password"></param>
       /// <param name="ipAddress"></param>
       /// <returns>Jwt token</returns>
-      Task<string> LoginAsync(string email, string password);
+      Task<AuthData> LoginAsync(string email, string password);
   }
 }

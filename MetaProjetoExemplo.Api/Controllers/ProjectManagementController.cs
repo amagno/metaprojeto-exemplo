@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Application.Attributes;
-using MetaProjetoExemplo.Application.Exceptions;
-using MetaProjetoExemplo.Application.Extesions;
-using MetaProjetoExemplo.Application.Services;
-using MetaProjetoExemplo.Application.Services.Common;
-using MetaProjetoExemplo.Application.ViewModels;
+using MetaProjetoExemplo.Application.Commands;
+using MetaProjetoExemplo.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MetaProjetoExemplo.Api.Controllers
@@ -20,28 +13,27 @@ namespace MetaProjetoExemplo.Api.Controllers
       /// <summary>
       /// Criar novo projeto para usuário logado
       /// </summary>
-      /// <param name="newProjectData"></param>
-      /// <param name="projectManagementService"></param>
+      /// <param name="command"></param>
       /// <returns></returns>
       [HttpPost]
       [JwtAuthorize]
-      public async Task<ActionResult<ProjectCreated>> CreateProject(
-        [FromBody] NewProject newProjectData, 
-        [FromServices] IProjectManagementService projectManagementService
+      public async Task<ActionResult<int>> CreateProject(
+        [FromBody] CreateProjectCommand command
         )
       {
-        return await ExecuteServiceAsync(() => projectManagementService.CreateProject(_userIdentifier, newProjectData));
+        command.SetUserIdentifier(_userIdentifier);
+        return await SendCommandAsync(command);
       }
       /// <summary>
       /// Projetos do usuário logado
       /// </summary>
-      /// <param name="projectManagementService"></param>
+      /// <param name="queries"></param>
       /// <returns></returns>
       [HttpGet]
       [JwtAuthorize]
-      public async Task<ActionResult<ProjectManagerItem>> GetUserProjects([FromServices] IProjectManagementService projectManagementService)
+      public async Task<ActionResult<ProjectManagerViewModel>> GetUserProjects([FromServices] IProjectManagerQueries queries)
       {
-        return await ExecuteServiceAsync(() => projectManagementService.GetUserProjects(_userIdentifier));
+        return await queries.GetUserProjectManager(_userIdentifier);
       }
     }
 }

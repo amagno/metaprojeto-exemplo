@@ -24,9 +24,9 @@ namespace MetaProjetoExemplo.Infrastructure.Repositories.ProjectManagement
         .FirstOrDefaultAsync(p => p.UserIdentifier == userIdentfier);
     }
 
-    public void Update(ProjectManager projectManager)
+    public ProjectManager Update(ProjectManager projectManager)
     {
-      _entity.Update(projectManager);
+      return _entity.Update(projectManager).Entity;
     }
   }
 }

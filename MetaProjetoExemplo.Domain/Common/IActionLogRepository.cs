@@ -2,8 +2,8 @@ using MetaProjetoExemplo.Domain.Core;
 
 namespace MetaProjetoExemplo.Domain.Common
 {
-  public interface IActionLogRepository : IRepository
+  public interface IActionRepository : IRepository
   {
-    ActionLog Add(ActionLog log);
+    Action Add(Action action);
   }
 }

@@ -5,7 +5,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Api;
 using MetaProjetoExemplo.Application.Services.Common;
-using MetaProjetoExemplo.Application.ViewModels;
 using MetaProjetoExemplo.Domain.Common;
 using MetaProjetoExemplo.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -67,8 +66,8 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
       }
       await SeedDataAsync(scope);
       var auth = scope.ServiceProvider.GetRequiredService<IAuthService>();
-      var token =  await auth.LoginAsync(DefaultUser.Email, DefaultUser.Password);
-      var authHeader = new AuthenticationHeaderValue("Bearer", token);
+      var result =  await auth.LoginAsync(DefaultUser.Email, DefaultUser.Password);
+      var authHeader = new AuthenticationHeaderValue("Bearer", result.Token);
       _client.DefaultRequestHeaders.Authorization = authHeader;
       return _client;
     }

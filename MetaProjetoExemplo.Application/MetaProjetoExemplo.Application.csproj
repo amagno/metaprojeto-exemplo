@@ -4,6 +4,7 @@
     <ProjectReference Include="..\MetaProjetoExemplo.Domain\MetaProjetoExemplo.Domain.csproj" />
     <ProjectReference Include="..\MetaProjetoExemplo.Security\MetaProjetoExemplo.Security.csproj" />
     <ProjectReference Include="..\MetaProjetoExemplo.Domain.Core\MetaProjetoExemplo.Domain.Core.csproj" />
+    <ProjectReference Include="..\MetaProjetoExemplo.Infrastructure\MetaProjetoExemplo.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -13,7 +14,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
 </Project>

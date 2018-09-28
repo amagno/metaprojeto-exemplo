@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Api;
 using MetaProjetoExemplo.Application.Services.Common;
-using MetaProjetoExemplo.Application.ViewModels;
 using MetaProjetoExemplo.Domain.Common;
 using MetaProjetoExemplo.Domain.ProjectManagement;
 using MetaProjetoExemplo.Infrastructure;
@@ -40,7 +39,7 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
         var client = await _webApplicationFactory.CreateAuthenticatedClientForDefaultUserAsync(scope);
         var ef = _webApplicationFactory.GetContext(scope);
         // dados da requsição
-        var jsonPayload = JsonConvert.SerializeObject(new NewProject
+        var jsonPayload = JsonConvert.SerializeObject(new
         {
           Title = "hello",
           StartDate = DateTime.Now,
@@ -53,10 +52,9 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
         // resultadp
         var result = await response.Content.ReadAsStringAsync();
 
-        var objectResult = JsonConvert.DeserializeObject<ProjectCreated>(result);
+        var id = int.Parse(result);
 
-        Assert.NotEqual(0, objectResult.Id);
-        Assert.True(objectResult.Success);
+        Assert.NotEqual(0, id);
         // pega direto do entity framework
         var projects = await ef.Projects.ToListAsync();
         Assert.Single(projects);

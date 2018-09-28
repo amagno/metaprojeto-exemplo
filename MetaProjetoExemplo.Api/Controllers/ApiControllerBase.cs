@@ -11,11 +11,12 @@ namespace MetaProjetoExemplo.Api.Controllers
   {
     protected string _ipRequest => HttpContext.Connection.RemoteIpAddress != null ? HttpContext.Connection.RemoteIpAddress.ToString() : "no_ip_info";
     protected Guid _userIdentifier => HttpContext.GetUserIdentifier();
-    protected async Task<ActionResult<T>> ExecuteServiceAsync<T>(Func<Task<T>> func)
+    protected async Task<ActionResult<T>> SendCommandAsync<T>(IRequest<T> command)
     {
+      var mediator = HttpContext.RequestServices.GetService(typeof(IMediator)) as IMediator;
       try
       {
-        T result = await func();
+        T result = await mediator.Send(command);
         return Ok(result);
       }
       catch (InvalidRequestException e)
@@ -26,11 +27,6 @@ namespace MetaProjetoExemplo.Api.Controllers
       {
         return StatusCode(500, e.Message);
       }
-    }
-    protected async Task<T> SendCommand<T>(IRequest<T> command)
-    {
-      var mediator = HttpContext.RequestServices.GetService(typeof(IMediator)) as IMediator;
-      return await mediator.Send(command);
     }
   }
 }

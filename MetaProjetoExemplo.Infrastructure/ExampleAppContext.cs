@@ -1,3 +1,4 @@
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Domain.Common;
@@ -17,7 +18,7 @@ namespace MetaProjetoExemplo.Infrastructure
     public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<ProjectManager> ProjectManagers { get; set; }
-    public DbSet<ActionLog> UserLoginLogs { get; set; }
+    public DbSet<Action> Actions { get; set; }
 
     public ExampleAppContext(DbContextOptions<ExampleAppContext> options) : base(options) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,8 +48,13 @@ namespace MetaProjetoExemplo.Infrastructure
         }
       }
     }
+    public IDbConnection GetConnection()
+    {
+      return base.Database.GetDbConnection();
+    }
     private void SeedInitialData(ModelBuilder modelBuilder)
     {
+    
       // Seed enumeration data
       // modelBuilder.Entity<ActionLogType>().HasData(new ActionLogType[] {
       //   ActionLogType.UserCreated,
@@ -56,9 +62,9 @@ namespace MetaProjetoExemplo.Infrastructure
       //   ActionLogType.UserLoginFail,
       //   ActionLogType.UserLoginSuccess
       // }); 
-      var entities = ActionLogType.GetAll<ActionLogType>().ToArray();
+      var entities = ActionType.GetAll<ActionType>().ToArray();
 
-      modelBuilder.Entity<ActionLogType>().HasData(entities);
+      modelBuilder.Entity<ActionType>().HasData(entities);
     }
   }
   /// <summary>

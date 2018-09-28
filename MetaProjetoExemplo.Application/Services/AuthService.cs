@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Application.Exceptions;
-using MetaProjetoExemplo.Application.ViewModels;
 using MetaProjetoExemplo.Domain.Common;
 using MetaProjetoExemplo.Domain.Core;
 using MetaProjetoExemplo.Security;
@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace MetaProjetoExemplo.Application.Services.Common
 {
+  public class AuthData
+  {
+    public string Token { get; set; }
+    public Guid UserIdentifier { get; set; }
+  }
   public class AuthService : IAuthService
   {
     private readonly IUserRepository _userRepository;
@@ -28,7 +33,7 @@ namespace MetaProjetoExemplo.Application.Services.Common
     /// <param name="password"></param>
     /// <param name="ipAddress"></param>
     /// <returns>Token de autenticação</returns>
-    public async Task<string> LoginAsync(string email, string password)
+    public async Task<AuthData> LoginAsync(string email, string password)
     {
       var user = await _userRepository.GetByEmailAsync(email);
 
@@ -42,8 +47,13 @@ namespace MetaProjetoExemplo.Application.Services.Common
         throw new InvalidUserPasswordException();
       }
 
-      return _jwt.CreateToken(CreateClaims(user));
+      var token = _jwt.CreateToken(CreateClaims(user));
 
+      return new AuthData 
+      {
+        Token = token,
+        UserIdentifier =  user.Identifier
+      };
     }
     /// <summary>
     /// Cria claims de autenticação para o token

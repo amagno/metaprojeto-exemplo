@@ -2,10 +2,11 @@
 
 using System.ComponentModel.DataAnnotations;
 using MediatR;
+using MetaProjetoExemplo.Application.Services.Common;
 
 namespace MetaProjetoExemplo.Application.Commands
 {
-  public class UserLoginCommand : IRequest<string>
+  public class UserLoginCommand : IRequest<AuthData>
   {
     [Required]
     [DataType(DataType.EmailAddress)]
