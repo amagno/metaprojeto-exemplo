@@ -23,7 +23,7 @@ namespace MetaProjetoExemplo.Application.Events
         notification.UserIdentifier
       ));
 
-      await _actionRepository.UnitOfWork.SaveChangesAsync();
+      await _actionRepository.UnitOfWork.CommitAsync();
     }
   }
 }

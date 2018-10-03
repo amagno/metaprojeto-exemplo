@@ -54,17 +54,15 @@ namespace MetaProjetoExemplo.Infrastructure
     }
     private void SeedInitialData(ModelBuilder modelBuilder)
     {
-    
-      // Seed enumeration data
-      // modelBuilder.Entity<ActionLogType>().HasData(new ActionLogType[] {
-      //   ActionLogType.UserCreated,
-      //   ActionLogType.UserLoginAttempt,
-      //   ActionLogType.UserLoginFail,
-      //   ActionLogType.UserLoginSuccess
-      // }); 
+      // Seed enumartion data;
       var entities = ActionType.GetAll<ActionType>().ToArray();
-
       modelBuilder.Entity<ActionType>().HasData(entities);
+    }
+
+    public async Task<bool> CommitAsync()
+    {
+      var result = await base.SaveChangesAsync();
+      return result > 0;
     }
   }
   /// <summary>

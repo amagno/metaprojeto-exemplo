@@ -9,7 +9,9 @@ namespace MetaProjetoExemplo.Api.Controllers
 {
   public abstract class ApiControllerBase : ControllerBase
   {
-    protected string _ipRequest => HttpContext.Connection.RemoteIpAddress != null ? HttpContext.Connection.RemoteIpAddress.ToString() : "no_ip_info";
+    protected string _ipRequest => HttpContext.Connection.RemoteIpAddress != null ? 
+      HttpContext.Connection.RemoteIpAddress.ToString() : 
+      string.Empty;
     protected Guid _userIdentifier => HttpContext.GetUserIdentifier();
     protected async Task<ActionResult<T>> SendCommandAsync<T>(IRequest<T> command)
     {
@@ -22,6 +24,10 @@ namespace MetaProjetoExemplo.Api.Controllers
       catch (InvalidRequestException e)
       {
         return BadRequest(e.Message);
+      }
+      catch (UnauthorizedException)
+      {
+        return Unauthorized();
       }
       catch (Exception e)
       {

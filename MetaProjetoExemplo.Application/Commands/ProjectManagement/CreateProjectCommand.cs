@@ -2,11 +2,12 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using MediatR;
 using MetaProjetoExemplo.Domain.Core;
 
-namespace MetaProjetoExemplo.Application.Commands
+namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
 {
-  public class CreateProjectCommand : IAuthenticatedRequest<int>
+  public class CreateProjectCommand : IRequest<bool>
   {
     // request data properties
     [Required]

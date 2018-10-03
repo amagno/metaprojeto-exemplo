@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using MetaProjetoExemplo.Application.Commands;
-using MetaProjetoExemplo.Application.Exceptions;
+using MetaProjetoExemplo.Application.Commands.Common;
 using MetaProjetoExemplo.Application.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,8 +22,7 @@ namespace MetaProjetoExemplo.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthData>> Login([FromBody] UserLoginCommand command, [FromServices] IAuthService authService)
         {
-            // MAKE IDETIFIED COMMAND FOR SEND IP
-            return await SendCommandAsync(command);
+            return await SendCommandAsync(new IpInfoCommand<UserLoginCommand, AuthData>(command, _ipRequest));
         }
     }
 }

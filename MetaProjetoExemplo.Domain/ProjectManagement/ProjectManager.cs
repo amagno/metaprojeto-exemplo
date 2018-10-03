@@ -10,7 +10,8 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
   {
     public Guid UserIdentifier { get; private set; }
     private readonly List<Project> _projects;
-    public IReadOnlyCollection<Project> Projects => _projects;
+    // para navegação deve ser marcada como virtual
+    public virtual IReadOnlyCollection<Project> Projects => _projects;
 
     protected ProjectManager()
     {
@@ -28,18 +29,18 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     /// Adicionar projeto, o mesmo só pode ser adiconado caso a data de começo e fim
     /// não esteja dentro da data de começo e fim dos projetos já existentes
     /// </summary>
-    /// <param name="title"></param>
-    /// <param name="startDate"></param>
-    /// <param name="finishDate"></param>
-    public Project AddProject(string title, DateTime startDate, DateTime finishDate)
+    /// <param name="title">titulo do projeto</param>
+    /// <param name="startDate">data de começo</param>
+    /// <param name="finishDate">data de termino</param>
+    public virtual Project AddProject(string title, DateTime startDate, DateTime finishDate)
     {
       if (_projects.Any(p => p.StartDate <= startDate && p.FinishDate >= startDate)) 
       {
-        throw new InvalidProjectDateException();
+        throw new InvalidProjectDateDomainException();
       }
       if (_projects.Any(p => p.StartDate <= finishDate && p.FinishDate >= finishDate)) 
       {
-        throw new InvalidProjectDateException();
+        throw new InvalidProjectDateDomainException();
       }
       var project = new Project(Id, title, startDate, finishDate);
       _projects.Add(project);

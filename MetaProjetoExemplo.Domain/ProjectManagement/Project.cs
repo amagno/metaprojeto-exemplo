@@ -6,8 +6,8 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
   public class Project : Entity
   {
     private int? _managerId;
-    // Apenas para navegação
-    public ProjectManager Manager { get; private set; }
+    // Apenas para navegação deve ser marcada como virtual
+    public virtual ProjectManager Manager { get; private set; }
     public string Title { get; private set; }
     public DateTime CreatedDate { get; private set; }
     public DateTime StartDate { get; private set; }
@@ -18,11 +18,21 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
       CreatedDate = DateTime.Now;
       IsActive = true;
     }
+    /// <summary>
+    /// Novo projeto
+    /// Regras: a data final do projeto deve ser pelo menos um dia superior
+    /// a data inicial
+    /// </summary>
+    /// <param name="managerId">Id do gerente de projeto</param>
+    /// <param name="title">Titulo do projeto</param>
+    /// <param name="startDate">Data de começo do projeto</param>
+    /// <param name="finishDate">Data final do projeto</param>
+    /// <returns></returns>
     public Project(int managerId, string title, DateTime startDate, DateTime finishDate) : this()
     {
       if (finishDate <= startDate)
       {
-        throw new InvalidProjectDateException();
+        throw new InvalidProjectDateDomainException();
       }
       _managerId = managerId;
       Title = title;
@@ -35,11 +45,7 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     /// </summary>
     public void FinalizeThis()
     {
-      if (FinishDate > DateTime.Now)
-      {
-        throw new InvalidFinalizeProjectException();
-      }
-      
+      FinishDate = DateTime.Now; 
       IsActive = false;
     }
   }

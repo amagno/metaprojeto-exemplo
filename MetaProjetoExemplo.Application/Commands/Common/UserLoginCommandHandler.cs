@@ -7,9 +7,9 @@ using MetaProjetoExemplo.Domain.Common;
 using MetaProjetoExemplo.Domain.Core;
 using MetaProjetoExemplo.Domain.Events;
 
-namespace MetaProjetoExemplo.Application.Commands
+namespace MetaProjetoExemplo.Application.Commands.Common
 {
-  public class UserLoginCommandHandler : IRequestHandler<UserLoginCommand, AuthData>
+  public class UserLoginCommandHandler : IRequestHandler<IpInfoCommand<UserLoginCommand, AuthData>, AuthData>
   {
     private readonly IMediator _mediator;
     private readonly IAuthService _auth;
@@ -18,18 +18,18 @@ namespace MetaProjetoExemplo.Application.Commands
       _mediator = mediator;
       _auth = auth;
     }
-    public async Task<AuthData> Handle(UserLoginCommand request, CancellationToken cancellationToken)
+    public async Task<AuthData> Handle(IpInfoCommand<UserLoginCommand, AuthData> request, CancellationToken cancellationToken)
     {
       try
       {
-        await _mediator.Publish(new LoginAttemptActionEvent(request.GetIp()));
-        var result = await _auth.LoginAsync(request.Email, request.Password);
-        await _mediator.Publish(new LoginSuccessActionEvent(result.UserIdentifier, request.GetIp()));
+        await _mediator.Publish(new LoginAttemptActionEvent(request.IpInfo));
+        var result = await _auth.LoginAsync(request.Command.Email, request.Command.Password);
+        await _mediator.Publish(new LoginSuccessActionEvent(result.UserIdentifier, request.IpInfo));
         return result;
       }
       catch(InvalidRequestException e)
       {
-        await _mediator.Publish(new LoginFailActionEvent(request.GetIp()));
+        await _mediator.Publish(new LoginFailActionEvent(request.IpInfo));
         throw e;
       }
     }

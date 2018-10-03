@@ -6,7 +6,7 @@ namespace MetaProjetoExemplo.Domain.Core
 {
     public interface IUnitOfWork
     {
-      Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+      Task<bool> CommitAsync();
       IDbConnection GetConnection();
     }
 }

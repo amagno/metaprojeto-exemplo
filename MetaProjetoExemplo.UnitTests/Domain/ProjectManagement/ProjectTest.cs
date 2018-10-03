@@ -12,7 +12,7 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
     [Fact]
     public void Test_create_project_wtih_invalid_date()
     {
-      Assert.Throws<InvalidProjectDateException>(() => {
+      Assert.Throws<InvalidProjectDateDomainException>(() => {
         new Project(1, "teste", DateTime.Now, DateTime.Now.AddDays(-1));
       });
     }
@@ -26,18 +26,6 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
       Assert.True(project.IsActive);
       project.FinalizeThis();
       Assert.False(project.IsActive);
-    }
-    /// <summary>
-    /// Testa finalizar projeto com data invalida ou seja a data ainda não foi expirada
-    /// </summary>
-    [Fact]
-    public void Test_finalize_invalid_date_should_throw_exception()
-    {
-      var project = new Project(1, "teste", DateTime.Now, DateTime.Now.AddDays(3));
-
-      Assert.Throws<InvalidFinalizeProjectException>(() => {
-        project.FinalizeThis();
-      });
     }
   }
 }

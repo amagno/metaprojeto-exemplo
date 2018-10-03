@@ -4,24 +4,23 @@ using System.ComponentModel.DataAnnotations;
 using MediatR;
 using MetaProjetoExemplo.Application.Services.Common;
 
-namespace MetaProjetoExemplo.Application.Commands
+namespace MetaProjetoExemplo.Application.Commands.Common
 {
   public class UserLoginCommand : IRequest<AuthData>
   {
+    
+
     [Required]
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; }
     [Required]
     public string Password { get; set; }
-    private string _ip;
 
-    public void SetIp(string ip)
+    public UserLoginCommand(string email, string password)
     {
-      _ip = ip;
+      Email = email;
+      Password = password;
     }
-    public string GetIp()
-    {
-      return _ip;
-    }
+
   }
 }

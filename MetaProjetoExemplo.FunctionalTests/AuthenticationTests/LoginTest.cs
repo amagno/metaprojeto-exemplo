@@ -20,18 +20,17 @@ namespace MetaProjetoExemplo.FunctionalTests.AuthenticationTests
     private readonly WebApplicationFactory<Startup> _webApplicationFactory;
     public LoginTest(WebApplicationFactory<Startup> webApplicationFactory)
     {
-      var factory = webApplicationFactory.WithWebHostBuilder(builder => {
+      // cria web application com bando de dados na memoria
+      _webApplicationFactory = webApplicationFactory.WithWebHostBuilder(builder => {
         builder.ConfigureServices(services => {
           services.AddDbContext<ExampleAppContext>(options => {
             options.UseInMemoryDatabase("testing_login");
           });
         });
-      });
-
-     _webApplicationFactory = factory.Factories.FirstOrDefault() ?? factory;
-    
+      });    
     }
     /// <summary>
+    /// Testa a funçao de login da api respondendo um token valido
     /// Detalhe: para realizar migração no banco de dados na memoria as configuraçoes
     /// do entity framework nao pode ter funções ligadas ao banco de dados
     /// pois o banco de dados na memoria não possui funçoões por exemplo do SQLServer
@@ -41,9 +40,8 @@ namespace MetaProjetoExemplo.FunctionalTests.AuthenticationTests
     public async Task TestName()
     {
       var client = _webApplicationFactory.CreateClient();
-
       var services = _webApplicationFactory.Server.Host.Services;
-
+      // cria scopo de servicos
       using (var scope = services.CreateScope())
       {
         // serviço do entity framework
@@ -85,15 +83,7 @@ namespace MetaProjetoExemplo.FunctionalTests.AuthenticationTests
           // FAIL
           Assert.True(false);
         }
-
-
-        
-
-
       }    
     }
-
-
-
   }
 }
