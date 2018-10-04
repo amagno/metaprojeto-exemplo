@@ -9,25 +9,24 @@ using MetaProjetoExemplo.Domain.Common;
 using MetaProjetoExemplo.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
 {
-  public class ProjectManagementWebApplication : WebApplicationFactory<Startup>
+  public class ProjectManagementWebApplication : WebApplicationFactory<Startup>, IDisposable
   {
     public User DefaultUser = new User("teste", "teste@teste.com", "123");
     private HttpClient _client;
     public IServiceScope CreateScope()
     {
       _client = CreateClient();
-      return Factories.FirstOrDefault() != null ? 
-      Factories.First().Server.Host.Services.CreateScope() : 
-      Server.Host.Services.CreateScope();
+      return Server.Host.Services.CreateScope();
     }
     protected override void Dispose(bool disposing)
     {
-      using (var scope = Server.Host.Services.CreateScope())
+      using (var scope = CreateScope())
       {
         var context = scope.ServiceProvider.GetRequiredService<ExampleAppContext>();
         context.Database.EnsureDeleted();
@@ -36,10 +35,15 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     }
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+      // var connection = new SqliteConnection("DataSource=:memory:");
+      // connection.Open();
+
       builder.ConfigureServices(services => {
           services.AddDbContext<ExampleAppContext>(options => {
-            options.UseInMemoryDatabase("testing_login");
+            options.UseSqlServer("Server=localhost;Integrated Security=false;Database=testing_example_app;User=sa;Password=abc123##");
+            // options.UseSqlite("Data Source=testing.db");
           });
+
       });
     }
     public ExampleAppContext GetContext(IServiceScope scope)
@@ -49,12 +53,7 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     private async Task SeedDataAsync(IServiceScope scope)
     {
       var ef = scope.ServiceProvider.GetRequiredService<ExampleAppContext>();
-      var create = await ef.Database.EnsureCreatedAsync();
-      if (!create)
-      {
-        throw new Exception("error on migrate database");
-      }
-      // adiciona usuario teste
+      await ef.Database.EnsureCreatedAsync();
       ef.Users.Add(DefaultUser);
       await ef.SaveChangesAsync();
     }

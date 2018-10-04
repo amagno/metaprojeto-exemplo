@@ -9,7 +9,9 @@ using MetaProjetoExemplo.Application.Queries;
 using MetaProjetoExemplo.Application.Services;
 using MetaProjetoExemplo.Application.Services.Common;
 using MetaProjetoExemplo.Domain.Common;
+using MetaProjetoExemplo.Domain.Core;
 using MetaProjetoExemplo.Domain.ProjectManagement;
+using MetaProjetoExemplo.Infrastructure;
 using MetaProjetoExemplo.Infrastructure.Repositories.Common;
 using MetaProjetoExemplo.Infrastructure.Repositories.ProjectManagement;
 using MetaProjetoExemplo.Security;
@@ -17,6 +19,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -39,6 +42,11 @@ namespace MetaProjetoExemplo.Api
     {
       
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+      services.AddDbContext<ExampleAppContext>(options => {
+        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+      });
+
       services.AddScoped<IJwtAuth, JwtAuth>(sp =>
       {
         return new JwtAuth(
@@ -48,6 +56,7 @@ namespace MetaProjetoExemplo.Api
         );
       });
 
+      services.AddScoped<IContextConnection, ExampleAppContext>();
 
       services.AddScoped<IUserRepository, UserRepository>();
       services.AddScoped<IActionRepository, ActionRepository>();
@@ -65,8 +74,10 @@ namespace MetaProjetoExemplo.Api
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);
       });
-    }
 
+      // services.SeedAppUser(new User("administrador", "admin@test.com", "123"));
+    }
+    
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
@@ -84,8 +95,36 @@ namespace MetaProjetoExemplo.Api
         app.UseHsts();
       }
 
+      app.UseCors(cors => {
+        cors.AllowAnyHeader();
+        cors.AllowAnyOrigin();
+        cors.AllowAnyMethod();
+      });
+
       app.UseHttpsRedirection();
       app.UseMvc();
     }
   }
+  // extesao do servicos
+  static class ServicesExtesions
+  {
+    // criar usuario do sistema caso ele nao exista
+    public static IServiceCollection SeedAppUser(this IServiceCollection services, User user)
+    {
+      var sp = services.BuildServiceProvider();
+      using (var scope = sp.CreateScope())
+      {
+        var ef = scope.ServiceProvider.GetRequiredService<ExampleAppContext>();
+        var exists = ef.Users.FirstOrDefault(u => u.Email == user.Email);
+
+        if (exists == null)
+        {
+          ef.Users.Add(user);
+          ef.SaveChanges();
+        }
+      }
+      return services;
+    }
+  }
+  
 }

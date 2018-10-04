@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace MetaProjetoExemplo.Infrastructure
 {
-  public class ExampleAppContext : DbContext, IUnitOfWork
+  public class ExampleAppContext : DbContext, IUnitOfWork, IContextConnection
   {
     public const string PROJECT_MANAGEMENT_SCHEMA = "project_management";
     public const string COMMON_SCHEMA = "common";
@@ -58,10 +58,9 @@ namespace MetaProjetoExemplo.Infrastructure
       var entities = ActionType.GetAll<ActionType>().ToArray();
       modelBuilder.Entity<ActionType>().HasData(entities);
     }
-
     public async Task<bool> CommitAsync()
     {
-      var result = await base.SaveChangesAsync();
+      var result = await SaveChangesAsync();
       return result > 0;
     }
   }

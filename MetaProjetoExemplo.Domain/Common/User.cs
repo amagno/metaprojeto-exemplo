@@ -23,6 +23,5 @@ namespace MetaProjetoExemplo.Domain.Common
       Email = email;
       Password = password;
     }
-
   }
 }

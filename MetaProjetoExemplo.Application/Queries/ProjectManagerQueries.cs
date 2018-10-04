@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
+using MetaProjetoExemplo.Domain.Core;
 using MetaProjetoExemplo.Domain.ProjectManagement;
 using MetaProjetoExemplo.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -9,34 +13,51 @@ namespace MetaProjetoExemplo.Application.Queries
 {
   public class ProjectManagerQueries : IProjectManagerQueries
   {
-    private readonly ExampleAppContext _context;
-    public ProjectManagerQueries(ExampleAppContext context)
+    private readonly IDbConnection _connection;
+    public ProjectManagerQueries(IContextConnection contextConnection)
     {
-      _context = context;
+      _connection = contextConnection.GetConnection();
     }
 
     public async Task<ProjectManagerViewModel> GetUserProjectManager(Guid identifier)
     {
-      var query = await _context
-        .ProjectManagers
-        .Include(pm => pm.Projects)
-        .FirstOrDefaultAsync(pm => pm.UserIdentifier == identifier);
+      var data = await _connection.QueryAsync<dynamic>(@"
+        select 
+          pm.id as managerId,
+          p.id as projectId,
+          p.is_active,
+          p.title,
+          p.start_date,
+          p.finish_date
+        from project_management.project_managers as pm
+        inner join project_management.projects as p on (p.project_manager_id = pm.id)
+        where pm.user_identifier = @UserIdentifier
+      ", new { UserIdentifier = identifier });
 
-      return MapToProjectManagerViewModel(query);
+      var results = data;
+
+      return MapToProjectManagerViewModel(data);
     }
-    private ProjectManagerViewModel MapToProjectManagerViewModel(ProjectManager projectManager)
+    private ProjectManagerViewModel MapToProjectManagerViewModel(dynamic data)
     {
-      return new ProjectManagerViewModel 
+
+      var viewModel = new ProjectManagerViewModel 
       {
-        Id = projectManager.Id,
-        Projects = projectManager.Projects.Select(p => new ProjectItem 
-        {
-          Id = p.Id,
-          Title = p.Title,
-          StartDate = p.StartDate,
-          FinishDate = p.FinishDate
-        })
+        Id = data[0].managerId,
+        Projects = new List<ProjectItem>()
       };
+
+      foreach (var item in data)
+      {
+        viewModel.Projects.Add(new ProjectItem {
+          Id = item.projectId,
+          IsActive = item.is_active,
+          Title = item.title,
+          StartDate = item.start_date,
+          FinishDate = item.finish_date
+        });
+      }
+      return viewModel;
     }
   }
 }

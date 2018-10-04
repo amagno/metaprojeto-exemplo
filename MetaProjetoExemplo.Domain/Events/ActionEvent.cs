@@ -41,7 +41,7 @@ namespace MetaProjetoExemplo.Domain.Events
   public class LoginFailActionEvent : ActionEvent
   {
     public LoginFailActionEvent(string ipAddress) : 
-      base(ActionType.UserLoginAttempt, null, ipAddress)
+      base(ActionType.UserLoginFail, null, ipAddress)
     {
     }
   }
@@ -49,6 +49,13 @@ namespace MetaProjetoExemplo.Domain.Events
   {
     public ProjectCreatedActionEvent(Guid identifier) : 
       base(ActionType.UserCreatedProject, null, null, identifier)
+    {
+    }
+  }
+  public class ProjectFinalizedActionEvent : ActionEvent
+  {
+    public ProjectFinalizedActionEvent(Guid identifier) : 
+      base(ActionType.UserFinalizedProject, null, null, identifier)
     {
     }
   }

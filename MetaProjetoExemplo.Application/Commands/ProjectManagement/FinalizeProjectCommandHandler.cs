@@ -6,6 +6,7 @@ using MediatR;
 using MetaProjetoExemplo.Application.Commands.Common;
 using MetaProjetoExemplo.Application.Exceptions;
 using MetaProjetoExemplo.Domain.Core;
+using MetaProjetoExemplo.Domain.Events;
 using MetaProjetoExemplo.Domain.ProjectManagement;
 
 namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
@@ -15,7 +16,10 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
   {
     private readonly IMediator _mediator;
     private readonly IProjectManagerRepository _projectManagerRepository;
-    public FinalizeProjectCommandHandler(IMediator mediator, IProjectManagerRepository projectManagerRepository)
+    public FinalizeProjectCommandHandler(
+      IMediator mediator, 
+      IProjectManagerRepository projectManagerRepository
+      )
     {
       _projectManagerRepository = projectManagerRepository;
       _mediator = mediator;
@@ -29,22 +33,22 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
       {
         throw new InvalidProjectManagerException(request.UserIdentifier);
       }
-
       var project = projectManager
         .Projects
-        .FirstOrDefault(p => p.Id == request.Command.Id && p.IsActive);
+        .FirstOrDefault(p => p.IsActive && p.Id == request.Command.Id);
 
       if (project == null)
       {
         throw new InvalidProjectIdException(request.Command.Id);
       }
-
-
       try
       {
-        project.FinalizeThis();
+        project.FinalizeNow();
         _projectManagerRepository.Update(projectManager);
-        return await _projectManagerRepository.UnitOfWork.CommitAsync();
+        // realizar commit antes de publicar os eventos
+        var result = await _projectManagerRepository.UnitOfWork.CommitAsync();
+        await _mediator.Publish(new ProjectFinalizedActionEvent(request.UserIdentifier));
+        return result;
       }
       catch (DomainException e)
       {

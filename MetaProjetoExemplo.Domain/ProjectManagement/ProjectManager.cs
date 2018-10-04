@@ -11,7 +11,7 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     public Guid UserIdentifier { get; private set; }
     private readonly List<Project> _projects;
     // para navegação deve ser marcada como virtual
-    public virtual IReadOnlyCollection<Project> Projects => _projects;
+    public IReadOnlyCollection<Project> Projects => _projects;
 
     protected ProjectManager()
     {
@@ -32,7 +32,7 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     /// <param name="title">titulo do projeto</param>
     /// <param name="startDate">data de começo</param>
     /// <param name="finishDate">data de termino</param>
-    public virtual Project AddProject(string title, DateTime startDate, DateTime finishDate)
+    public Project AddProject(string title, DateTime startDate, DateTime finishDate)
     {
       if (_projects.Any(p => p.StartDate <= startDate && p.FinishDate >= startDate)) 
       {

@@ -40,10 +40,9 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
       FinishDate = finishDate;
     }
     /// <summary>
-    /// Finalizar projeto, so pode finalizar caso a data de termino do projeto 
-    /// tenha passado.
+    /// Finalizar projeto.
     /// </summary>
-    public void FinalizeThis()
+    public void FinalizeNow()
     {
       FinishDate = DateTime.Now; 
       IsActive = false;

@@ -24,7 +24,7 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
     {
       var project = new Project(1, "teste", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1));
       Assert.True(project.IsActive);
-      project.FinalizeThis();
+      project.FinalizeNow();
       Assert.False(project.IsActive);
     }
   }

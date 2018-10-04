@@ -37,7 +37,7 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
         var entity = exists ?
            _projectManagerRepository.Update(pm) :
            _projectManagerRepository.Add(pm);
-
+        // realizar commit antes de publicar os eventos
         var result = await _projectManagerRepository.UnitOfWork.CommitAsync();
         await _mediator.Publish(new ProjectCreatedActionEvent(pm.UserIdentifier));
 

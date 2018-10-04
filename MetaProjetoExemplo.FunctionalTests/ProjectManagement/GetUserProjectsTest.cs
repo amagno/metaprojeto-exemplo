@@ -8,6 +8,7 @@ using Xunit;
 
 namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
 {
+  [Collection("ProjectManagement")]
   public class GetUserProjectsTest : IClassFixture<ProjectManagementWebApplication>
   {
     private readonly ProjectManagementWebApplication _webApplicationFactory;
@@ -16,12 +17,6 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     {
       _webApplicationFactory = webApplicationFactory;
     }
-    /// <summary>
-    /// Detalhe: para realizar migração no banco de dados na memoria as configuraçoes
-    /// do entity framework nao pode ter funções ligadas ao banco de dados
-    /// pois o banco de dados na memoria não possui funçoões por exemplo do SQLServer
-    /// </summary>
-    /// <returns></returns>
     [Fact]
     public async Task Test_get_user_projects()
     {
@@ -41,11 +36,11 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
         Assert.Single(projects);
         // realiza requisição
         var response = await client.GetAsync("/api/project-management/");
+        response.EnsureSuccessStatusCode();
         // resultadp
         var result = await response.Content.ReadAsStringAsync();
         var objectResult = JsonConvert.DeserializeObject<ProjectManagerViewModel>(result);
 
-        response.EnsureSuccessStatusCode();
         Assert.Single(objectResult.Projects);
       }
     }

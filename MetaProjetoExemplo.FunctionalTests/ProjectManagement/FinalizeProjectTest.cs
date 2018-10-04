@@ -19,40 +19,47 @@ using Xunit;
 namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
 {
   [Collection("ProjectManagement")]
-  public class CreateProjectTest : IClassFixture<ProjectManagementWebApplication>
+  public class FinalizeProjectTest : IClassFixture<ProjectManagementWebApplication>
   {
     private readonly ProjectManagementWebApplication _webApplicationFactory;
-    public CreateProjectTest(ProjectManagementWebApplication webApplicationFactory)
+    public FinalizeProjectTest(ProjectManagementWebApplication webApplicationFactory)
     {
       _webApplicationFactory = webApplicationFactory;
     }
+    
     [Fact]
-    public async Task Test_create_project_with_valid_data()
+    public async Task Test_finalize_valid_project()
     {
       using (var scope = _webApplicationFactory.CreateScope())
       {
         var client = await _webApplicationFactory.CreateAuthenticatedClientForDefaultUserAsync(scope);
         var ef = _webApplicationFactory.GetContext(scope);
-        // dados da requsição
-        var jsonPayload = JsonConvert.SerializeObject(new
-        {
-          Title = "hello",
-          StartDate = DateTime.Now,
-          FinishDate = DateTime.Now.AddDays(3)
-        });
-        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+        var user = await ef.Users.FirstOrDefaultAsync();
+        var projectManager = new ProjectManager(user.Identifier);
+        projectManager.AddProject("teste", DateTime.Now, DateTime.Now.AddDays(2));
+
+        ef.ProjectManagers.Add(projectManager);
+        await ef.SaveChangesAsync();
+        var project = projectManager.Projects.FirstOrDefault();
+
         // realiza requisição
-        var response = await client.PostAsync("/api/project-management/", content);
+        var response = await client.GetAsync($"/api/project-management/finalize/{project.Id}");
         response.EnsureSuccessStatusCode();
-        // resultadp
+        // resposta
         var result = await response.Content.ReadAsStringAsync();
         Assert.Equal("true", result);
-        // pega direto do entity framework
-        var projects = await ef.Projects.ToListAsync();
-        Assert.Single(projects);
-        // verifica se açao de criação de projeto foi persistida
+      }
+      // cria um novo scopo para pegar o banco de dados 
+      // do entity framework atualizado
+      using (var scope = _webApplicationFactory.CreateScope())
+      {
+        var ef = _webApplicationFactory.GetContext(scope);
+        var projectVerify = await ef.Projects.FirstOrDefaultAsync(p => p.Id == 1);
         var actionTypeIds = ef.Actions.Select(a => a.ActionLogTypeId).ToList();
-        Assert.Contains(ActionType.UserCreatedProject.Id, actionTypeIds);
+        // verifica se o projetp esta marcado como não ativo
+        Assert.False(projectVerify.IsActive);
+        // verifica se o envento de acao projeto finalizado foi persistido
+        Assert.Contains(ActionType.UserFinalizedProject.Id, actionTypeIds);
       }
     }
     
