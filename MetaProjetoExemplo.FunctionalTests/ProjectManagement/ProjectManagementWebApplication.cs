@@ -28,7 +28,7 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     {
       using (var scope = CreateScope())
       {
-        var context = scope.ServiceProvider.GetRequiredService<ExampleAppContext>();
+        var context = GetContext(scope);
         context.Database.EnsureDeleted();
         base.Dispose(disposing);
       }
@@ -52,7 +52,7 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     }
     private async Task SeedDataAsync(IServiceScope scope)
     {
-      var ef = scope.ServiceProvider.GetRequiredService<ExampleAppContext>();
+      var ef = GetContext(scope);
       await ef.Database.EnsureCreatedAsync();
       ef.Users.Add(DefaultUser);
       await ef.SaveChangesAsync();
