@@ -6,6 +6,9 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
 {
   public class ProjectManagerTest
   {
+    /// <summary>
+    /// Testa adicionar Projects ao ProjectManager
+    /// </summary>
     [Fact]
     public void Test_add_valid_project()
     {
@@ -19,6 +22,9 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
       Assert.Equal(2, projectManager.Projects.Count);
     }
 
+    /// <summary>
+    /// Testa tentativa de adicionar projetos com datas inválidas deve ser lançado exception
+    /// </summary>
     [Fact]
     public void Test_add_invalid_date_project_should_throw_exception()
     {

@@ -26,7 +26,9 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     {
       _webApplicationFactory = webApplicationFactory;
     }
-    
+    /// <summary>
+    /// Testa finalizar projeto, verifica se eventos de ação foram persistidos
+    /// </summary>
     [Fact]
     public async Task Test_finalize_valid_project()
     {
@@ -34,12 +36,15 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
       {
         var client = await _webApplicationFactory.CreateAuthenticatedClientForDefaultUserAsync(scope);
         var ef = _webApplicationFactory.GetContext(scope);
+        // pega default user
         var user = await ef.Users.FirstOrDefaultAsync();
+        // adiciona dados
         var projectManager = new ProjectManager(user.Identifier);
         projectManager.AddProject("teste", DateTime.Now, DateTime.Now.AddDays(2));
-
         ef.ProjectManagers.Add(projectManager);
         await ef.SaveChangesAsync();
+
+        // pega projeto adicionado
         var project = projectManager.Projects.FirstOrDefault();
 
         // realiza requisição
@@ -50,15 +55,15 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
         Assert.Equal("true", result);
       }
       // cria um novo scopo para pegar o banco de dados 
-      // do entity framework atualizado
+      // do entity framework atualizado e verificar se eventos foram persistidos
       using (var scope = _webApplicationFactory.CreateScope())
       {
         var ef = _webApplicationFactory.GetContext(scope);
         var projectVerify = await ef.Projects.FirstOrDefaultAsync(p => p.Id == 1);
         var actionTypeIds = ef.Actions.Select(a => a.ActionLogTypeId).ToList();
-        // verifica se o projetp esta marcado como não ativo
+        // verifica se o projeto esta marcado como não ativo
         Assert.False(projectVerify.IsActive);
-        // verifica se o envento de acao projeto finalizado foi persistido
+        // verifica se o evento de acao projeto finalizado foi persistido
         Assert.Contains(ActionType.UserFinalizedProject.Id, actionTypeIds);
       }
     }

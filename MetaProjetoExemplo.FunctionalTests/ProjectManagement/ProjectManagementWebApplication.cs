@@ -19,11 +19,19 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
   {
     public User DefaultUser = new User("teste", "teste@teste.com", "123");
     private HttpClient _client;
+    /// <summary>
+    /// Cria cliente e retorna scopo
+    /// </summary>
+    /// <returns>Scopo</returns>
     public IServiceScope CreateScope()
     {
       _client = CreateClient();
       return Server.Host.Services.CreateScope();
     }
+    /// <summary>
+    /// Dispose pega contexto do banco de dados e deleta o mesmo
+    /// </summary>
+    /// <param name="disposing"></param>
     protected override void Dispose(bool disposing)
     {
       using (var scope = CreateScope())
@@ -33,6 +41,10 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
         base.Dispose(disposing);
       }
     }
+    /// <summary>
+    /// Configura webapplication 
+    /// </summary>
+    /// <param name="builder"></param>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
       // var connection = new SqliteConnection("DataSource=:memory:");
@@ -46,10 +58,20 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
 
       });
     }
+    /// <summary>
+    /// Pega contexto do entity framework
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <returns></returns>
     public ExampleAppContext GetContext(IServiceScope scope)
     {
       return scope.ServiceProvider.GetRequiredService<ExampleAppContext>();
     }
+    /// <summary>
+    /// Realiza migração do banco e adiciona o default user
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <returns></returns>
     private async Task SeedDataAsync(IServiceScope scope)
     {
       var ef = GetContext(scope);
@@ -57,6 +79,11 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
       ef.Users.Add(DefaultUser);
       await ef.SaveChangesAsync();
     }
+    /// <summary>
+    /// retorna cliente com headers de authorization
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <returns></returns>
     public async Task<HttpClient> CreateAuthenticatedClientForDefaultUserAsync(IServiceScope scope)
     {
       if (_client.DefaultRequestHeaders.Authorization != null)

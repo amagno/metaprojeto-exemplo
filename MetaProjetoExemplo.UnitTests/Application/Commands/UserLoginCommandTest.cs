@@ -14,14 +14,14 @@ namespace MetaProjetoExemplo.UnitTests.Application.Commands
     public class UserLoginCommandTest
     {
       /// <summary>
-      /// Testa commando de login
+      /// Testa commando de login quando dados estiverem corretos,
+      /// verifica se eventos de tentativa de login e sucesso de login foram publicados
       /// </summary>
       [Fact]
       public async Task Test_return_auth_data_and_publish_events_with_login_success()
       {
         // comand data
-        var loginCommand = new UserLoginCommand("teste@test.com", "123");
-        var command = new IpInfoCommand<UserLoginCommand, AuthData>(loginCommand,"ip_info_test");
+        var command = new UserLoginCommand("teste@test.com", "123", "ip_info_test");
         // mocks
         var mediatorMock = new Mock<IMediator>();
         var authServiceMock = new Mock<IAuthService>();
@@ -54,20 +54,19 @@ namespace MetaProjetoExemplo.UnitTests.Application.Commands
         // verifica resultado do command handler
         Assert.Equal(authData, result);
       }
+      /// <summary>
+      /// Testa se a exception do tipo InvalidRequestException foi lançanda
+      /// verifica se eventos de tentativa de login e falha de login foram publicados 
+      /// </summary>
       [Fact]
       public async Task Test_throw_invalid_request_exception_with_fail_login()
       {
         // comand data
-        var loginCommand = new UserLoginCommand("teste@test.com", "123");
-        var command = new IpInfoCommand<UserLoginCommand, AuthData>(loginCommand,"ip_info_test");
+        var command = new UserLoginCommand("teste@test.com", "123", "ip_info_test");
         // mocks
         var mediatorMock = new Mock<IMediator>();
         var authServiceMock = new Mock<IAuthService>();
-        // login data
-        var authData = new AuthData {
-          Token = "testing token",
-          UserIdentifier = Guid.NewGuid()
-        };
+    
         // auth service mock
         authServiceMock
           .Setup(a => a.LoginAsync(It.IsAny<string>(), It.IsAny<string>()))

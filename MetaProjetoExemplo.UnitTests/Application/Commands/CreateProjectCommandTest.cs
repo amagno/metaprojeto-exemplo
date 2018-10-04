@@ -76,10 +76,9 @@ namespace MetaProjetoExemplo.UnitTests.Application.Commands
         It.IsAny<CancellationToken>()
       ), Times.Never());
     }
-    private AuthenticatedCommand<CreateProjectCommand, bool> CreateFakeCommand(Guid userIdentifier, DateTime startDate, DateTime finishDate)
+    private CreateProjectCommand CreateFakeCommand(Guid userIdentifier, DateTime startDate, DateTime finishDate)
     {
-      var projectData = new CreateProjectCommand("teste", startDate, finishDate);
-      return new AuthenticatedCommand<CreateProjectCommand, bool>(projectData, userIdentifier);
+      return new CreateProjectCommand("teste", startDate, finishDate, userIdentifier, "info_testing");
     }
     private Mock<IProjectManagerRepository> GetProjectManagerRepositoryMock()
     {

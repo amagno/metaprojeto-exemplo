@@ -26,6 +26,9 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     {
       _webApplicationFactory = webApplicationFactory;
     }
+    /// <summary>
+    /// Testa criar projeto com dados validos
+    /// </summary>
     [Fact]
     public async Task Test_create_project_with_valid_data()
     {

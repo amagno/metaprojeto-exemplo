@@ -11,8 +11,7 @@ using MetaProjetoExemplo.Domain.ProjectManagement;
 
 namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
 {
-  public class FinalizeProjectCommandHandler : 
-    IRequestHandler<AuthenticatedCommand<FinalizeProjectCommand, bool>, bool>
+  public class FinalizeProjectCommandHandler : IRequestHandler<FinalizeProjectCommand, bool>
   {
     private readonly IMediator _mediator;
     private readonly IProjectManagerRepository _projectManagerRepository;
@@ -25,7 +24,7 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
       _mediator = mediator;
     }
 
-    public async Task<bool> Handle(AuthenticatedCommand<FinalizeProjectCommand, bool> request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(FinalizeProjectCommand request, CancellationToken cancellationToken)
     {
       var projectManager = await _projectManagerRepository.GetByUserIdentifierAsync(request.UserIdentifier);
       
@@ -35,11 +34,11 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
       }
       var project = projectManager
         .Projects
-        .FirstOrDefault(p => p.IsActive && p.Id == request.Command.Id);
+        .FirstOrDefault(p => p.IsActive && p.Id == request.Id);
 
       if (project == null)
       {
-        throw new InvalidProjectIdException(request.Command.Id);
+        throw new InvalidProjectIdException(request.Id);
       }
       try
       {

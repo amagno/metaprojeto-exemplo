@@ -22,7 +22,8 @@ namespace MetaProjetoExemplo.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthData>> Login([FromBody] UserLoginCommand command, [FromServices] IAuthService authService)
         {
-            return await SendCommandAsync(new IpInfoCommand<UserLoginCommand, AuthData>(command, _ipRequest));
+            command.IpInfo = _ipRequest;
+            return await SendCommandAsync(command);
         }
     }
 }

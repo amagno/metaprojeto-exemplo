@@ -9,7 +9,7 @@ using MetaProjetoExemplo.Domain.Events;
 
 namespace MetaProjetoExemplo.Application.Commands.Common
 {
-  public class UserLoginCommandHandler : IRequestHandler<IpInfoCommand<UserLoginCommand, AuthData>, AuthData>
+  public class UserLoginCommandHandler : IRequestHandler<UserLoginCommand, AuthData>
   {
     private readonly IMediator _mediator;
     private readonly IAuthService _auth;
@@ -18,12 +18,12 @@ namespace MetaProjetoExemplo.Application.Commands.Common
       _mediator = mediator;
       _auth = auth;
     }
-    public async Task<AuthData> Handle(IpInfoCommand<UserLoginCommand, AuthData> request, CancellationToken cancellationToken)
+    public async Task<AuthData> Handle(UserLoginCommand request, CancellationToken cancellationToken)
     {
       try
       {
         await _mediator.Publish(new LoginAttemptActionEvent(request.IpInfo));
-        var result = await _auth.LoginAsync(request.Command.Email, request.Command.Password);
+        var result = await _auth.LoginAsync(request.Email, request.Password);
         await _mediator.Publish(new LoginSuccessActionEvent(result.UserIdentifier, request.IpInfo));
         return result;
       }

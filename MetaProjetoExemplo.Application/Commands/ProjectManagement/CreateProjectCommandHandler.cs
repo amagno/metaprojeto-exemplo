@@ -12,7 +12,7 @@ using MetaProjetoExemplo.Domain.ProjectManagement;
 
 namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
 {
-  public class CreateProjectCommandHandler : IRequestHandler<AuthenticatedCommand<CreateProjectCommand, bool>, bool>
+  public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, bool>
   {
     private readonly IProjectManagerRepository _projectManagerRepository;
     private readonly IMediator _mediator;
@@ -21,7 +21,7 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
       _mediator = mediator;
       _projectManagerRepository = projectManagerRepository;
     }
-    public async Task<bool> Handle(AuthenticatedCommand<CreateProjectCommand, bool> request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
     {
       try
       {
@@ -33,13 +33,13 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
           pm = new ProjectManager(request.UserIdentifier);
         }
         
-        pm.AddProject(request.Command.Title, request.Command.StartDate, request.Command.FinishDate);
+        pm.AddProject(request.Title, request.StartDate, request.FinishDate);
         var entity = exists ?
            _projectManagerRepository.Update(pm) :
            _projectManagerRepository.Add(pm);
         // realizar commit antes de publicar os eventos
         var result = await _projectManagerRepository.UnitOfWork.CommitAsync();
-        await _mediator.Publish(new ProjectCreatedActionEvent(pm.UserIdentifier));
+        await _mediator.Publish(new ProjectCreatedActionEvent(request.UserIdentifier));
 
         return result;
       }

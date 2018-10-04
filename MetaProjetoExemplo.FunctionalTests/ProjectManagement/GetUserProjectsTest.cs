@@ -17,6 +17,9 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
     {
       _webApplicationFactory = webApplicationFactory;
     }
+    /// <summary>
+    /// Testa consulta dos projetos do gerente de projetos
+    /// </summary>
     [Fact]
     public async Task Test_get_user_projects()
     {
@@ -24,23 +27,20 @@ namespace MetaProjetoExemplo.FunctionalTests.ProjectManagement
       {
         var client = await _webApplicationFactory.CreateAuthenticatedClientForDefaultUserAsync(scope);
         var ef = _webApplicationFactory.GetContext(scope);
+        // pega default user
         var user = await ef.Users.FirstAsync();
-        // dados da requsição
+        // adiciona dados
         var projectManager = new ProjectManager(user.Identifier);
         projectManager.AddProject("test1", DateTime.Now, DateTime.Now.AddDays(2));
-
         ef.ProjectManagers.Add(projectManager);
         await ef.SaveChangesAsync();
-
-        var projects = await ef.Projects.ToListAsync();
-        Assert.Single(projects);
         // realiza requisição
         var response = await client.GetAsync("/api/project-management/");
         response.EnsureSuccessStatusCode();
         // resultadp
         var result = await response.Content.ReadAsStringAsync();
         var objectResult = JsonConvert.DeserializeObject<ProjectManagerViewModel>(result);
-
+        // deve conter um projeto
         Assert.Single(objectResult.Projects);
       }
     }

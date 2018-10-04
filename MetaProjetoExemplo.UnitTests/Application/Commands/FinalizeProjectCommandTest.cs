@@ -19,8 +19,7 @@ namespace MetaProjetoExemplo.UnitTests.Application.Commands
       // criacao do commando
       var projectId = 0;
       var userIdentifier = Guid.NewGuid();
-      var command = new FinalizeProjectCommand(projectId);
-      var authCommand = new AuthenticatedCommand<FinalizeProjectCommand, bool>(command, userIdentifier);
+      var command = new FinalizeProjectCommand(projectId, userIdentifier, "info_test");
 
       // cria projectmanager e adiciona projeto valido
       var projectManager = new ProjectManager(userIdentifier);
@@ -39,7 +38,7 @@ namespace MetaProjetoExemplo.UnitTests.Application.Commands
         .ReturnsAsync(true);
       // handler
       var handler = new FinalizeProjectCommandHandler(mediatorMock.Object, projectManagerRepositoryMock.Object);
-      var result = await handler.Handle(authCommand, It.IsAny<CancellationToken>());
+      var result = await handler.Handle(command, It.IsAny<CancellationToken>());
       // projeto nao deve estar ativo
       Assert.False(projectManager.Projects.FirstOrDefault().IsActive);
       Assert.True(result);

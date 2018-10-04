@@ -22,12 +22,8 @@ namespace MetaProjetoExemplo.Api.Controllers
         [FromBody] CreateProjectCommand command
         )
       {
-        return await SendCommandAsync(
-          new AuthenticatedCommand<CreateProjectCommand, bool>(
-            command, 
-            _userIdentifier
-          )
-        );
+        command.SetRequestInfo(_userIdentifier, _ipRequest);
+        return await SendCommandAsync(command);
       }
       /// <summary>
       /// Projetos do usuário logado
@@ -49,12 +45,7 @@ namespace MetaProjetoExemplo.Api.Controllers
       [JwtAuthorize]
       public async Task<ActionResult<bool>> FinalizeProject([FromRoute] int id)
       {
-        return await SendCommandAsync(
-          new AuthenticatedCommand<FinalizeProjectCommand, bool>(
-            new FinalizeProjectCommand(id), 
-            _userIdentifier
-          )
-        );
+        return await SendCommandAsync(new FinalizeProjectCommand(id, _userIdentifier, _ipRequest));
       }
     }
 }
