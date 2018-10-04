@@ -5,6 +5,7 @@
 Requer .NET Core SDK 2.1.3
 
 > altere a connectionString da classe **MetaProjetoExemplo.Infrastructure.ExampleAppContextDesignFactory**
+
 ```csharp
 public class ExampleAppContextDesignFactory : IDesignTimeDbContextFactory<ExampleAppContext>
   {
@@ -17,18 +18,24 @@ public class ExampleAppContextDesignFactory : IDesignTimeDbContextFactory<Exampl
     }
   }
 ```
+
 > realize a migração do banco de dados
+
 ```terminal
 cd MetaProjetoExemplo.Infrastructure
 dotnet ef database update
 ```
+
 > para excutar a aplicação, adicione sua conexão em **MetaProjetoExemplo.Api/appsettings.Development.json**
+
 ```json
 "ConnectionStrings": {
     "DefaultConnection": "Server=localhost;Integrated Security=false;Database=your_database;User=your_user;Password=your_password"
 }
 ```
+
 > excutar
+
 ```terminal
 cd MetaProjetoExemplo.Api
 dotnet run
