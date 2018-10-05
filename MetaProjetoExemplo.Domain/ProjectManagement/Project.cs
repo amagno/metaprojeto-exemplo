@@ -5,9 +5,7 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
 {
   public class Project : Entity
   {
-    private int? _managerId;
-    // Apenas para navegação deve ser marcada como virtual
-    public virtual ProjectManager Manager { get; private set; }
+    int? _projectManagerId;
     public string Title { get; private set; }
     public DateTime CreatedDate { get; private set; }
     public DateTime StartDate { get; private set; }
@@ -28,13 +26,13 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     /// <param name="startDate">Data de começo do projeto</param>
     /// <param name="finishDate">Data final do projeto</param>
     /// <returns></returns>
-    public Project(int managerId, string title, DateTime startDate, DateTime finishDate) : this()
+    public Project(int projectManagerId, string title, DateTime startDate, DateTime finishDate) : this()
     {
       if (finishDate <= startDate)
       {
         throw new InvalidProjectDateDomainException();
       }
-      _managerId = managerId;
+      _projectManagerId = projectManagerId;
       Title = title;
       StartDate = startDate;
       FinishDate = finishDate;

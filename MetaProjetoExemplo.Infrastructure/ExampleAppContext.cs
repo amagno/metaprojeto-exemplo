@@ -73,7 +73,7 @@ namespace MetaProjetoExemplo.Infrastructure
     public ExampleAppContext CreateDbContext(string[] args)
     {
       var optionsBuilder = new DbContextOptionsBuilder<ExampleAppContext>()
-        .UseSqlServer("Data Source=localhost; Initial Catalog=example_app; Integrated Security=false; User Id=sa; Password=abc123##;");
+        .UseSqlServer("Data Source=database; Initial Catalog=example_app; Integrated Security=false; User Id=sa; Password=abc123##;");
 
       return new ExampleAppContext(optionsBuilder.Options);
     }

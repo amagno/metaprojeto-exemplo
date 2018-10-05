@@ -128,8 +128,9 @@ namespace MetaProjetoExemplo.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnName("is_active");
 
-                    b.Property<int?>("ManagerId")
-                        .HasColumnName("manager_id");
+                    b.Property<int?>("ProjectManagerId")
+                        .IsRequired()
+                        .HasColumnName("project_manager_id");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnName("start_date");
@@ -138,13 +139,9 @@ namespace MetaProjetoExemplo.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnName("title");
 
-                    b.Property<int?>("project_manager_id")
-                        .IsRequired()
-                        .HasColumnName("project_manager_id");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("project_manager_id");
+                    b.HasIndex("ProjectManagerId");
 
                     b.ToTable("projects","project_management");
                 });
@@ -176,9 +173,9 @@ namespace MetaProjetoExemplo.Infrastructure.Migrations
 
             modelBuilder.Entity("MetaProjetoExemplo.Domain.ProjectManagement.Project", b =>
                 {
-                    b.HasOne("MetaProjetoExemplo.Domain.ProjectManagement.ProjectManager", "Manager")
+                    b.HasOne("MetaProjetoExemplo.Domain.ProjectManagement.ProjectManager")
                         .WithMany("Projects")
-                        .HasForeignKey("project_manager_id")
+                        .HasForeignKey("ProjectManagerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

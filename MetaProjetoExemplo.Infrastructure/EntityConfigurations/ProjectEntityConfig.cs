@@ -26,9 +26,8 @@ namespace MetaProjetoExemplo.Infrastructure.EntityConfiguration
         .IsRequired();
 
       builder
-        .HasOne(p => p.Manager)
+        .HasOne<ProjectManager>()
         .WithMany(pm => pm.Projects)
-        .HasForeignKey("project_manager_id")
         .IsRequired()
         .OnDelete(DeleteBehavior.Cascade);
     }

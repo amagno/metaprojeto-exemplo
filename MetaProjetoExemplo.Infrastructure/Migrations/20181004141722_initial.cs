@@ -91,13 +91,12 @@ namespace MetaProjetoExemplo.Infrastructure.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    project_manager_id = table.Column<int>(nullable: false),
                     title = table.Column<string>(nullable: false),
                     created_date = table.Column<DateTime>(nullable: false),
                     start_date = table.Column<DateTime>(nullable: false),
                     finish_date = table.Column<DateTime>(nullable: false),
                     is_active = table.Column<bool>(nullable: false),
-                    manager_id = table.Column<int>(nullable: true)
+                    project_manager_id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
