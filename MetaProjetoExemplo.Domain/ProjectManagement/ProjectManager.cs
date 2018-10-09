@@ -34,11 +34,11 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     /// <param name="finishDate">data de termino</param>
     public Project AddProject(string title, DateTime startDate, DateTime finishDate)
     {
-      if (_projects.Any(p => p.StartDate <= startDate && p.FinishDate >= startDate)) 
+      if (_projects.Any(p => p.StartDate <= startDate && p.FinishDate >= finishDate)) 
       {
         throw new InvalidProjectDateDomainException();
       }
-      if (_projects.Any(p => p.StartDate <= finishDate && p.FinishDate >= finishDate)) 
+      if (_projects.Any(p => p.StartDate <= finishDate && p.FinishDate >= startDate)) 
       {
         throw new InvalidProjectDateDomainException();
       }

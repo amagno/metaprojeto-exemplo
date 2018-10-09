@@ -105,7 +105,7 @@ namespace MetaProjetoExemplo.Api
       app.UseMvc();
     }
   }
-  // extesao do servicos
+  // extensão do servicos
   static class ServicesExtesions
   {
     // criar usuario do sistema caso ele nao exista

@@ -1,6 +1,7 @@
 using Xunit;
 using MetaProjetoExemplo.Domain.ProjectManagement;
 using System;
+using System.Linq;
 
 namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
 {
@@ -20,6 +21,37 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
     
       //Then
       Assert.Equal(2, projectManager.Projects.Count);
+    }
+    /// <summary>
+    /// Testa adicionar Projects ao ProjectManager com mesma data
+    /// </summary>
+    [Fact]
+    public void Test_fail_add_project_with_same_date()
+    {
+      //Given
+      var projectManager = new ProjectManager(Guid.NewGuid());
+      //When
+      projectManager.AddProject("teste 1", DateTime.Now, DateTime.Now.AddDays(10));
+      
+      Assert.Throws<InvalidProjectDateDomainException>(() => {
+        projectManager.AddProject("teste 2", DateTime.Now, DateTime.Now.AddDays(10));
+      });
+    }
+    /// <summary>
+    /// Testa adicionar Projects ao ProjectManager quando já existe projetos finalizados
+    /// </summary>
+    [Fact]
+    public void Test_add_valid_project_with_finalized_projects()
+    {
+      //Given
+      var projectManager = new ProjectManager(Guid.NewGuid());
+      //When
+      projectManager.AddProject("teste 1", DateTime.Now.AddDays(2), DateTime.Now.AddDays(10));
+      projectManager.Projects.ToArray()[0].FinalizeNow();
+      projectManager.AddProject("teste 2", DateTime.Now.AddDays(10), DateTime.Now.AddDays(15));
+      projectManager.AddProject("teste 3", DateTime.Now.AddDays(1), DateTime.Now.AddDays(4));
+      //Then
+      Assert.Equal(3, projectManager.Projects.Count);
     }
 
     /// <summary>

@@ -34,7 +34,7 @@ namespace MetaProjetoExemplo.Application.Queries
         where pm.user_identifier = @UserIdentifier
       ", new { UserIdentifier = identifier });
 
-      return MapToProjectManagerViewModel(data);
+      return data.AsList().Count == 0 ? null : MapToProjectManagerViewModel(data);
     }
     private ProjectManagerViewModel MapToProjectManagerViewModel(dynamic data)
     {
