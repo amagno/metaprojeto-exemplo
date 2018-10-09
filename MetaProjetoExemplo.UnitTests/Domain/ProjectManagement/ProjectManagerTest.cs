@@ -45,13 +45,18 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
     {
       //Given
       var projectManager = new ProjectManager(Guid.NewGuid());
-      //When
+      // finalize
       projectManager.AddProject("teste 1", DateTime.Now.AddDays(2), DateTime.Now.AddDays(10));
       projectManager.Projects.ToArray()[0].FinalizeNow();
-      projectManager.AddProject("teste 2", DateTime.Now.AddDays(10), DateTime.Now.AddDays(15));
-      projectManager.AddProject("teste 3", DateTime.Now.AddDays(1), DateTime.Now.AddDays(4));
+      projectManager.AddProject("teste 2", DateTime.Now.AddDays(4), DateTime.Now.AddDays(10));
+      projectManager.Projects.ToArray()[1].FinalizeNow();
+      // finalize
+
+      projectManager.AddProject("teste 3", DateTime.Now, DateTime.Now.AddDays(1));
+      projectManager.AddProject("teste 4", DateTime.Now.AddDays(2), DateTime.Now.AddDays(4));
+      projectManager.AddProject("teste 5", DateTime.Now.AddDays(5), DateTime.Now.AddDays(8));
       //Then
-      Assert.Equal(3, projectManager.Projects.Count);
+      Assert.Equal(5, projectManager.Projects.Count);
     }
 
     /// <summary>
