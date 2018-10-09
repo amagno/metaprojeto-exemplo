@@ -1205,30 +1205,30 @@
       "MetaProjetoExemplo.Application.Commands.Common.UserLoginCommand": {
         "System.String MetaProjetoExemplo.Application.Commands.Common.UserLoginCommand::get_Email()": {
           "Lines": {
-            "15": 4
+            "13": 4
           },
           "Branches": []
         },
         "System.String MetaProjetoExemplo.Application.Commands.Common.UserLoginCommand::get_Password()": {
           "Lines": {
-            "17": 4
+            "15": 4
           },
           "Branches": []
         },
         "System.String MetaProjetoExemplo.Application.Commands.Common.UserLoginCommand::get_IpInfo()": {
           "Lines": {
-            "18": 6
+            "16": 6
           },
           "Branches": []
         },
         "System.Void MetaProjetoExemplo.Application.Commands.Common.UserLoginCommand::.ctor(System.String,System.String,System.String)": {
           "Lines": {
+            "18": 2,
+            "19": 2,
             "20": 2,
             "21": 2,
             "22": 2,
-            "23": 2,
-            "24": 2,
-            "25": 2
+            "23": 2
           },
           "Branches": []
         }

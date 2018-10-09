@@ -8,8 +8,6 @@ namespace MetaProjetoExemplo.Application.Commands.Common
 {
   public class UserLoginCommand : IRequest<AuthData>
   {
-    
-
     [Required]
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; }

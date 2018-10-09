@@ -21,6 +21,7 @@ namespace MetaProjetoExemplo.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
+                // .UseUrls(Environment.GetEnvironmentVariable("ASPNETCORE_URLS"));
     }
     #pragma warning restore CS1591
 }

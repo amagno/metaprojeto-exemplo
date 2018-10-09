@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MetaProjetoExemplo.Domain.Common;
@@ -72,6 +73,8 @@ namespace MetaProjetoExemplo.Infrastructure
   {
     public ExampleAppContext CreateDbContext(string[] args)
     {
+      var dbServer = string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("SQL_DATA_SOURCE")) ? "localhost" : System.Environment.GetEnvironmentVariable("SQL_DATA_SOURCE");
+      Debug.WriteLine($"INFO ========> USING SQL DATA SOURCE: {dbServer}");
       var optionsBuilder = new DbContextOptionsBuilder<ExampleAppContext>()
         .UseSqlServer("Data Source=database; Initial Catalog=example_app; Integrated Security=false; User Id=sa; Password=abc123##;");
 

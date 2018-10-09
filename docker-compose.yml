@@ -1,6 +1,14 @@
 version: '3'
 
 services:
+  client:
+    image: metaprojeto-exemplo-client
+    ports:
+      - "8080:80"
+    build:
+      context: ./MetaProjetoExemplo.SpaClient/
+    networks:
+      - exampleapp
   # API
   api:
     image: metaprojeto-exemplo-api
@@ -9,14 +17,14 @@ services:
       dockerfile: ./MetaProjetoExemplo.Api/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
-      # - ASPNETCORE_URLS=http://*:5000
+      ASPNETCORE_URLS: "http://*:5000"
+      DATABASE_SERVER: "database"
     ports:
       - "5000:5000"
-    networks:
-      - exampleapp
     depends_on:
       - database
-
+    networks:
+      - exampleapp
   database:
     image: microsoft/mssql-server-linux
     ports:

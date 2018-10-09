@@ -75,7 +75,7 @@ namespace MetaProjetoExemplo.Api
         c.IncludeXmlComments(xmlPath);
       });
 
-      // services.SeedAppUser(new User("administrador", "admin@test.com", "123"));
+      services.SeedAppUser(new User("administrador", "admin@test.com", "123"));
     }
     
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,7 +101,7 @@ namespace MetaProjetoExemplo.Api
         cors.AllowAnyMethod();
       });
 
-      app.UseHttpsRedirection();
+      // app.UseHttpsRedirection();
       app.UseMvc();
     }
   }

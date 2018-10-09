@@ -3,7 +3,7 @@
 cd ./MetaProjetoExemplo.Api
 
 set -e
-run_cmd="dotnet run --urls http://*:5000"
+run_cmd="dotnet run --urls=$ASPNETCORE_URLS"
 
 until dotnet ef database update --project ../MetaProjetoExemplo.Infrastructure/; do
 >&2 echo "SQL Server is starting up"
