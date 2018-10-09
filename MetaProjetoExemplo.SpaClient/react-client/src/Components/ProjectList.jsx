@@ -1,68 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import { project } from '../Lib/project';
-import moment from 'moment'
-const styles = theme => ({
-  root: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-  },
-  date: {
-    marginRight: theme.spacing.unit * 1
-  }
-});
-const ProjectItem = ({ classes, project }) => (
-  <Paper className={classes.root} elevation={1}>
-    <Typography variant="h5" component="h3">
-      {project.title}
-    </Typography>
-  <div style={{ display: 'flex', flexDirection: 'row' }}>
-    <Typography component="p" className={classes.date}>
-      <strong>Começo: </strong>
-      {moment(project.startDate).format('ll')}
-    </Typography>
-    <Typography component="p" className={classes.date}>
-      <strong>Final: </strong>
-      {moment(project.finishDate).format('ll')}
-    </Typography>
-    <Typography component="p" className={classes.date}>
-      <strong>Situação: </strong>
-      {project.isActive ? 'Ativo' : 'Finalizado'}
-    </Typography>
-  </div>
-  </Paper>
-)
+import React from 'react'
+import ProjectItem from './ProjectItem'
+import { connect } from 'react-redux'
+import { fecthProjectsAction } from '../Actions/projectAction'
+
 class ProjectList extends React.Component {
-  state = {
-    projects: []
-  }
   componentDidMount = async () => {
-    const { projects } = await project.getProjects()
-    console.log('did mount')
-    this.setState(state => ({
-      ...state,
-      projects: Array.isArray(projects) ? projects : []
-    }))
+    this.props.dispatch(fecthProjectsAction())
   }
   render() {
-    const { classes } = this.props;
-
+    const { projects } = this.props
     return (
-      <div>
-        {this.state.projects.map((p, i) => 
-          <ProjectItem  classes={classes} project={p} key={i} />
+      <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+        {projects.map((p, i) => 
+          <ProjectItem project={p} key={i} />
         )}
       </div>
     );
   }
 }
 
-ProjectList.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(ProjectList);
+export default connect(state => ({
+  projects: state.projectManagement.projects
+}))(ProjectList);

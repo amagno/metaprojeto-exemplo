@@ -2,7 +2,8 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent'
-
+import { connect } from 'react-redux'
+import { closeSnackBar } from '../Actions/snackBarAction';
 
 const Action = ({ handleClick }) =>  (
   <Button color="secondary" size="small" onClick={handleClick}>
@@ -16,13 +17,9 @@ const Content = ({ handleClose, message }) => (
   />
 )
 class SimpleSnackbar extends React.Component {
-  test = () => {
-    console.log('test')
-  }
   render() {
     return (
       <div>
-        {console.log('snack bar', this.props)}
         <Snackbar
           open={this.props.open}
           autoHideDuration={6000}
@@ -35,4 +32,9 @@ class SimpleSnackbar extends React.Component {
   }
 }
 
-export default SimpleSnackbar;
+export default connect(
+  state => ({ ...state.snackBar }),
+  dispatch => ({ 
+    handleClose: () => dispatch(closeSnackBar())
+  })
+)(SimpleSnackbar);

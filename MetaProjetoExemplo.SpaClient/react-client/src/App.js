@@ -1,51 +1,33 @@
-import React from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
-import LoginPage from './Pages/LoginPage';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { auth } from './Lib/auth';
-import ProjectsPage from './Pages/ProjectsPage';
+import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import { Provider } from 'react-redux'
+import { store } from './Stores/store';
+
+import AuthenticatedRoute from './Components/Route/AuthenticatedRoute'
+import RedirectIfLoggedRoute from './Components/Route/RedirectIfLoggedRoute'
+import ProjectsPage from './Pages/ProjectsPage'
+import LoginPage from './Pages/LoginPage'
+import SimpleSnackBar from './Components/SnackBar'
 
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
 });
-const AuthenticatedRoute = ({ component: Component, ...props }) => {
-  const urlToRedirect = '/login'
-  return <Route {...props} render={componentProps => (
-    auth.userIsLogged() ? 
-    <Component {...componentProps} /> :
-    <Redirect to={{
-      pathname: urlToRedirect,
-      state: { from: componentProps.location }
-    }}/>
-  )}/>
-
-}
-const RedirectIfLoggedRoute = ({ component: Component, to, ...props,  }) => {
-  const urlToRedirect = to
-  return <Route {...props} render={componentProps => (
-    auth.userIsLogged() ? 
-    <Redirect to={{
-      pathname: urlToRedirect,
-      state: { from: componentProps.location }
-    }}/>
-    : <Component {...componentProps} /> 
-  )}/>
-
-}
-
 
 class App extends React.Component {
   render() {
     return (
-      <BrowserRouter>
-        <MuiThemeProvider theme={theme}>
-          {/* <Route exact path="/login" component={LoginPage} /> */}
-          <RedirectIfLoggedRoute exact path="/login" component={LoginPage} to="/" />
-          <AuthenticatedRoute exact path="/" component={ProjectsPage} />
-        </MuiThemeProvider>
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <MuiThemeProvider theme={theme}>
+            <RedirectIfLoggedRoute exact path="/login" component={LoginPage} to="/" />
+            <AuthenticatedRoute exact path="/" component={ProjectsPage} />
+            <SimpleSnackBar />
+          </MuiThemeProvider>
+        </BrowserRouter>
+      </Provider> 
     );
   }
 }

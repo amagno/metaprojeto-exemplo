@@ -8,7 +8,14 @@ const setUserInfo = (userInfo) => {
   const str = JSON.stringify(userInfo);
   localStorage.setItem(userInfoKey, str)
 }
+const userIsLogged = () => {
+  return !!localStorage.getItem(userInfoKey)
+}
 const getUserToken = () => {
+  if (!userIsLogged()) {
+    return null;
+  }
+
   const data = JSON.parse(localStorage.getItem(userInfoKey))
 
   if (!data.token) {
@@ -16,9 +23,6 @@ const getUserToken = () => {
   }
 
   return data.token
-}
-const userIsLogged = () =>{
-  return !!localStorage.getItem(userInfoKey)
 }
 const login = async (email, password) => {
   try {
@@ -34,15 +38,19 @@ const login = async (email, password) => {
     setUserInfo({ token, userIdentifier })
     return true;
   } catch (error) {
-    console.log('ERROR ERRRO', error)
     return false;
   }
-
 }
-
+const http = () => {
+  const authOpt = {
+    headers: {'Authorization': `Bearer ${getUserToken()}`}
+  }
+  return axios.create(authOpt);
+}
 
 export const auth = {
   login,
   userIsLogged,
-  getUserToken
+  getUserToken,
+  http
 }

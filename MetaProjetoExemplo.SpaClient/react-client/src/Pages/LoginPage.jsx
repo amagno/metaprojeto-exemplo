@@ -1,11 +1,10 @@
 import React from 'react'
 import Button from '@material-ui/core/Button'
-import { withStyles } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import { auth } from '../Lib/auth';
-import SimpleSnackBar from '../Components/SnackBar';
-import { withRouter } from 'react-router-dom'
+import { withStyles } from '@material-ui/core'
+import { connect } from 'react-redux';
+import { loginAction } from '../Actions/authAction';
 
 
 const styles = {
@@ -21,51 +20,20 @@ const styles = {
 }
 class LoginPage extends React.Component {
   state = {
-    data: {
-      email: '',
-      password: ''
-    },
-    fail: false
+    email: '',
+    password: ''
   }
   handleChange = name => event => {
     this.setState({
-      ...this.state,
-      data: {
-        ...this.state.data,
-        [name]: event.target.value
-      }
-    })
-  }
-  setErrorForm = result => {
-    console.log('set error form', result)
-  }
-  handleFailClose = () => {
-    console.log('handle close')
-    this.setState({
-      ...this.state,
-      fail: false,
-      isSending: false
+      [name]: event.target.value
     })
   }
   handleSubmit = async event => {
-    this.setState({
-      ...this.state,
-      isSending: true
-    })
-    const { email, password } = this.state.data
-    const result = await auth.login(email, password)
+    event.preventDefault()
+    const { email, password } = this.state
+    const result = await this.props.dispatch(loginAction(email, password))
 
-    this.setState({
-      ...this.state,
-      isSending: false
-    })
-        
-    if (result === false) {
-      this.setState({
-        ...this.state,
-        fail: true
-      })
-    } else {
+    if (result === true) {
       this.props.history.push(['/'])
     }
   }
@@ -75,11 +43,11 @@ class LoginPage extends React.Component {
         <ValidatorForm onSubmit={this.handleSubmit} className={this.props.classes.container}>
           <Typography variant="subtitle2" gutterBottom>
             Login
-        </Typography>
+          </Typography>
           <TextValidator
             id="email_form"
             label="E-mail"
-            value={this.state.data.email}
+            value={this.state.email}
             onChange={this.handleChange('email')}
             margin="normal"
             variant="outlined"
@@ -90,7 +58,7 @@ class LoginPage extends React.Component {
           <TextValidator
             id="password_form"
             label="Senha"
-            value={this.state.data.password}
+            value={this.state.password}
             onChange={this.handleChange('password')}
             margin="normal"
             variant="outlined"
@@ -99,15 +67,14 @@ class LoginPage extends React.Component {
             name="password"
             errorMessages={['campo obrigatório']}
           />
-          <Button disabled={this.state.isSending} type="submit" className={this.props.classes.button} variant="outlined" color="primary">
+          <Button disabled={this.props.isSending} type="submit" className={this.props.classes.button} variant="outlined" color="primary">
             Login
           </Button>
         </ValidatorForm>
-        <SimpleSnackBar handleClose={this.handleFailClose} open={this.state.fail} message="login error" />
       </div>
     )
   }
 }
 
 
-export default withStyles(styles)(withRouter(LoginPage));
+export default withStyles(styles)(connect(state => ({ ...state.auth }))(LoginPage));

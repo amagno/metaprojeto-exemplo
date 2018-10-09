@@ -5,8 +5,8 @@ import Button from '@material-ui/core/Button'
 import moment from 'moment'
 import { ValidatorForm } from 'react-material-ui-form-validator';
 import TextValidator from 'react-material-ui-form-validator/lib/TextValidator';
-import { project } from '../Lib/project';
-
+import { connect } from 'react-redux'
+import { createProject } from '../Actions/projectAction';
 
 const styles = theme => ({
   container: {
@@ -44,10 +44,7 @@ class PorjectForm extends React.Component {
       startDate: moment(this.state.startDate).format(),
       finishDate: moment(this.state.finishDate).format()
     }
-
-    const result =  await project.createProject(data)
-
-    console.log('result', result)
+    this.props.dispatch(createProject(data))
   }
   render() {
     const { classes } = this.props;
@@ -107,4 +104,4 @@ PorjectForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PorjectForm);
+export default withStyles(styles)(connect()(PorjectForm));
