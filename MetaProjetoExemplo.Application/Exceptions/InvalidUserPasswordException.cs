@@ -4,7 +4,7 @@ namespace MetaProjetoExemplo.Application.Exceptions
 {
   public class InvalidUserPasswordException : InvalidRequestException
   {
-    public InvalidUserPasswordException(string message = null) : base("Invalid password " + message)
+    public InvalidUserPasswordException(string message = null) : base(ErrorCode.InvalidUserPassword, "Invalid password " + message)
     {
     }
   }

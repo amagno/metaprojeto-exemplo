@@ -34,13 +34,13 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     /// <param name="finishDate">data de termino</param>
     public Project AddProject(string title, DateTime startDate, DateTime finishDate)
     {
-      if (_projects.Any(p => p.StartDate <= startDate && p.FinishDate >= finishDate)) 
+      if (_projects.Any(p => p.StartDate <= startDate && p.FinishDate >= startDate && p.IsActive)) 
       {
-        throw new InvalidProjectDateDomainException();
+        throw new InvalidProjectDateDomainException("data de inicio intercede projetos já existentes");
       }
-      if (_projects.Any(p => p.StartDate <= finishDate && p.FinishDate >= startDate)) 
+      if (_projects.Any(p => p.StartDate <= finishDate && p.FinishDate >= finishDate && p.IsActive)) 
       {
-        throw new InvalidProjectDateDomainException();
+        throw new InvalidProjectDateDomainException("data de fim intercede projetos já existentes");
       }
       var project = new Project(Id, title, startDate, finishDate);
       _projects.Add(project);

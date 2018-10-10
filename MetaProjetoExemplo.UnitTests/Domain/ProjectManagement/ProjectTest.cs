@@ -17,12 +17,12 @@ namespace MetaProjetoExemplo.UnitTests.Domain.ProjectManagement
       });
     }
     /// <summary>
-    /// Testa finalizar um projeto com data valida, ou seja a data já está expirada
+    /// Testa finalizar um projeto 
     /// </summary>
     [Fact]
     public void Test_finalize_valid_date()
     {
-      var project = new Project(1, "teste", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1));
+      var project = new Project(1, "teste", DateTime.Now, DateTime.Now.AddDays(2));
       Assert.True(project.IsActive);
       project.FinalizeNow();
       Assert.False(project.IsActive);

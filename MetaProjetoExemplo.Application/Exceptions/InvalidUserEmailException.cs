@@ -4,7 +4,7 @@ namespace MetaProjetoExemplo.Application.Exceptions
 {
   public class InvalidUserEmailException : InvalidRequestException
   {
-    public InvalidUserEmailException(string email) : base($"Invalid user e-mail: {email}")
+    public InvalidUserEmailException(string email) : base(ErrorCode.InvalidUserEmail, $"Invalid user e-mail: {email}")
     {
     }
   }

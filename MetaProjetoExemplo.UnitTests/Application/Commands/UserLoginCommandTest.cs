@@ -70,7 +70,7 @@ namespace MetaProjetoExemplo.UnitTests.Application.Commands
         // auth service mock
         authServiceMock
           .Setup(a => a.LoginAsync(It.IsAny<string>(), It.IsAny<string>()))
-          .ThrowsAsync(new InvalidRequestException());
+          .ThrowsAsync(new InvalidRequestException(It.IsAny<ErrorCode>()));
 
         // handle command
         var handler = new UserLoginCommandHandler(mediatorMock.Object, authServiceMock.Object);

@@ -43,9 +43,13 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
 
         return result;
       }
+      catch (InvalidProjectDateDomainException e)
+      {
+        throw new InvalidRequestException(ErrorCode.InvalidProjectDate, e.Message);
+      }
       catch (DomainException e)
       {
-        throw new InvalidRequestException(e.Message);
+        throw new InvalidRequestException(ErrorCode.NoErrorCode, e.Message);
       }
     }
   }

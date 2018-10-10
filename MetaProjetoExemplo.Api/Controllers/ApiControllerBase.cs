@@ -23,7 +23,11 @@ namespace MetaProjetoExemplo.Api.Controllers
       }
       catch (InvalidRequestException e)
       {
-        return BadRequest(e.Message);
+        return BadRequest(new {
+          Error = true,
+          Code = (int) e.ErrorCode,
+          Message = e.Message
+        });
       }
       catch (UnauthorizedException)
       {

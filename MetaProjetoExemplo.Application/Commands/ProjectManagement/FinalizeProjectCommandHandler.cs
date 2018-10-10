@@ -51,7 +51,7 @@ namespace MetaProjetoExemplo.Application.Commands.ProjectManagement
       }
       catch (DomainException e)
       {
-        throw new InvalidRequestException(e.Message);
+        throw new InvalidRequestException(ErrorCode.NoErrorCode, e.Message);
       }
     }
   }

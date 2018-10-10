@@ -30,7 +30,11 @@ namespace MetaProjetoExemplo.Domain.ProjectManagement
     {
       if (finishDate <= startDate)
       {
-        throw new InvalidProjectDateDomainException();
+        throw new InvalidProjectDateDomainException("data de fim deve ser maior que a data de inicio");
+      }
+      if (startDate < DateTime.Now.Date)
+      {
+        throw new InvalidProjectDateDomainException("data de inicio deve ser maior que data atual");
       }
       _projectManagerId = projectManagerId;
       Title = title;
