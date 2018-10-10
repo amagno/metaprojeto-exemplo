@@ -41,7 +41,7 @@ class LoginPage extends React.Component {
     return (
       <div>
         <ValidatorForm onSubmit={this.handleSubmit} className={this.props.classes.container}>
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant="h2" gutterBottom style={{}}>
             Login
           </Typography>
           <TextValidator
@@ -67,7 +67,7 @@ class LoginPage extends React.Component {
             name="password"
             errorMessages={['campo obrigatório']}
           />
-          <Button disabled={this.props.isSending} type="submit" className={this.props.classes.button} variant="outlined" color="primary">
+          <Button id="login_button" disabled={this.props.isSending} type="submit" className={this.props.classes.button} variant="outlined" color="primary">
             Login
           </Button>
         </ValidatorForm>

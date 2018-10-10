@@ -6,7 +6,10 @@ import moment from 'moment'
 import { ValidatorForm } from 'react-material-ui-form-validator';
 import TextValidator from 'react-material-ui-form-validator/lib/TextValidator';
 import { connect } from 'react-redux'
-import { createProject } from '../Actions/projectAction';
+import { createProject } from '../Actions/projectAction'
+import ProjectDatePicker from './ProjectDatePicker'
+
+
 
 const styles = theme => ({
   container: {
@@ -24,8 +27,8 @@ const styles = theme => ({
 class PorjectForm extends React.Component {
   state = {
     title: '',
-    finishDate: '',
-    startDate: ''
+    finishDate: null,
+    startDate: null,
   }
   handleChange = name => event => {
     const { value } = event.target
@@ -37,18 +40,24 @@ class PorjectForm extends React.Component {
   }
   handleSubmit = async event => {
     event.preventDefault()
-    console.log(this.state)
+    const { title, startDate, finishDate } = this.state
 
+    
     const data = {
-      ...this.state,
-      startDate: moment(this.state.startDate).format(),
-      finishDate: moment(this.state.finishDate).format()
+      title,
+      startDate: moment(startDate).format(),
+      finishDate: moment(finishDate).format()
     }
     this.props.dispatch(createProject(data))
   }
+  handleDateChange = name => date => {
+    this.setState(state => ({
+      ...state,
+      [name]: date
+    }))
+  }
   render() {
-    const { classes } = this.props;
-
+    const { classes } = this.props
     return (
       <ValidatorForm onSubmit={this.handleSubmit} className={classes.container} noValidate>
         <TextValidator
@@ -66,33 +75,21 @@ class PorjectForm extends React.Component {
             shrink: true,
           }}
         />
-        <TextValidator
-          id="date"
-          label="Data de começo"
-          type="date"
-          name="startDate"
+        <ProjectDatePicker 
+          projects={this.props.projects} 
+          name="startDate" 
+          label="Data de começo" 
+          className={classes.textField} 
           value={this.state.startDate}
-          onChange={this.handleChange('startDate')}
-          validators={['required']}
-          errorMessages={['this field is required']}
-          className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
+          onChange={this.handleDateChange('startDate')}
         />
-        <TextValidator
-          id="date"
-          name="finishDate"
-          label="Data de fim"
-          type="date"
+        <ProjectDatePicker 
+          projects={this.props.projects} 
+          name="finishDate" 
+          label="Data de fim" 
+          className={classes.textField} 
           value={this.state.finishDate}
-          onChange={this.handleChange('finishDate')}
-          validators={['required']}
-          errorMessages={['this field is required']}
-          className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
+          onChange={this.handleDateChange('finishDate')}
         />
         <Button type="submit" variant="contained" color="primary">Criar</Button>
       </ValidatorForm>
@@ -102,6 +99,9 @@ class PorjectForm extends React.Component {
 
 PorjectForm.propTypes = {
   classes: PropTypes.object.isRequired,
+  projects: PropTypes.array.isRequired
 };
 
-export default withStyles(styles)(connect()(PorjectForm));
+export default withStyles(styles)(connect(state => ({
+  projects: state.projectManagement.projects
+}))(PorjectForm));

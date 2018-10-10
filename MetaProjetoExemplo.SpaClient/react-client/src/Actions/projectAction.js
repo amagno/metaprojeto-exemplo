@@ -30,7 +30,12 @@ export const createProject = project => async dispatch => {
     dispatch(fecthProjectsAction())
     dispatch(openSnackBar('projeto criado com sucesso'))
   } catch (error) {
-    dispatch(handleProjectsFailAction('erro ao criar projeto'))
+    if (error.response.status === 400) {
+      dispatch(handleProjectsFailAction('projeto com dados inválidos'))
+    } else {
+      dispatch(handleProjectsFailAction('erro ao criar projeto'))
+    }
+    
   }
 }
 export const finalizeProjectAction = id => async dispatch => {
@@ -44,8 +49,12 @@ export const finalizeProjectAction = id => async dispatch => {
 }
 export const fecthProjectsAction = () => async dispatch => {
   try {
+    dispatch(fetchProjects())
     const response = await auth.http().get(url)
-    dispatch(receiveProjects(response.data.projects))
+    if (Array.isArray(response.data.projects)) {
+      dispatch(receiveProjects(response.data.projects))
+    }
+    
   } catch (error) {
     dispatch(handleProjectsFailAction('erro ao buscar projetos'))
   }

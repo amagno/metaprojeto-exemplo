@@ -10,7 +10,15 @@ class ProjectList extends React.Component {
   render() {
     const { projects } = this.props
     return (
-      <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+      <div style={{ 
+        marginTop: '20px', 
+        display: 'flex', 
+        flexDirection: 'row', 
+        flexWrap: 'wrap', 
+        justifyContent: 'space-around',
+        maxHeight: '60vh',
+        overflow: 'auto'
+      }}>
         {projects.map((p, i) => 
           <ProjectItem project={p} key={i} />
         )}

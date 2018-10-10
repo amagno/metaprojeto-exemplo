@@ -24,6 +24,9 @@ const getUserToken = () => {
 
   return data.token
 }
+const logout = () => {
+  localStorage.removeItem(userInfoKey)
+}
 const login = async (email, password) => {
   try {
     const response = await axios.post(`${url}/login`, {
@@ -42,15 +45,29 @@ const login = async (email, password) => {
   }
 }
 const http = () => {
-  const authOpt = {
-    headers: {'Authorization': `Bearer ${getUserToken()}`}
-  }
-  return axios.create(authOpt);
+  const instance = axios.create({
+    headers: {'Authorization': `Bearer ${getUserToken()}`},
+    validateStatus: status => {
+      return (status >= 200 && status < 300) || status === 401;
+    }
+  });
+
+  instance.interceptors.response.use(response => {
+    if (response.status === 401) {
+      logout();
+      window.location.reload();
+    }
+
+    return response
+  })
+
+  return instance
 }
 
 export const auth = {
   login,
   userIsLogged,
   getUserToken,
-  http
+  http,
+  logout
 }
