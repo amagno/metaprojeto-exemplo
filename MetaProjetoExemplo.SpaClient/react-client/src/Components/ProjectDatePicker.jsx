@@ -31,6 +31,7 @@ const ProjectDatePicker = ({ projects, name, ...props }) => (
               <TextValidator
                 {...props}
                 name={name}
+                type="text"
                 validators={['required']}
                 errorMessages={['this field is required']}
                 InputLabelProps={{

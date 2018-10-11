@@ -18,7 +18,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: "http://*:5000"
-      DATABASE_SERVER: "database"
+      SQL_DATA_SOURCE: "database"
     ports:
       - "5000:5000"
     depends_on:

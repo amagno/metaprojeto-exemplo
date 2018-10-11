@@ -40,11 +40,14 @@ namespace MetaProjetoExemplo.Api
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+       var dbServer = string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("SQL_DATA_SOURCE")) ? 
+       "localhost" : 
+       System.Environment.GetEnvironmentVariable("SQL_DATA_SOURCE");
 
+      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+      
       services.AddDbContext<ExampleAppContext>(options => {
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+        options.UseSqlServer($"Server={dbServer};Integrated Security=false;Database=example_app;User=sa;Password=abc123##");
       });
 
       services.AddScoped<IJwtAuth, JwtAuth>(sp =>
