@@ -21,5 +21,5 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+    - name: Run unit tests
+      run: dotnet test ./MetaProjetoExemplo.UnitTests/ --no-restore --verbosity normal
